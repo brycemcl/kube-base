@@ -2,7 +2,7 @@
 git clone https://github.com/brycemcl/kube-base.git
 
 #update
-cd git pull
+git pull
 
 
 sudo kubeadm init --config node-config/kubeadm.yaml --upload-certs

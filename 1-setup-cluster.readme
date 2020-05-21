@@ -13,5 +13,6 @@ kubectl taint nodes --all node-role.kubernetes.io/master-
 
 ## wait for cluster to come up
 kubectl apply -k .
+sudo apt install apache2-utils -y
 kubectl patch secret -n argocd argocd-secret   -p '{"stringData": { "admin.password": "'$(htpasswd -bnBC 10 "" 'newpassword' | tr -d ':\n')'"}}'
 kubectl create secret generic -n metallb-system memberlist --from-literal=secretkey="$(openssl rand -base64 128)"

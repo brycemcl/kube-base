@@ -62,8 +62,8 @@ parameters:
   csi.storage.k8s.io/node-stage-secret-namespace: rook-ceph
   csi.storage.k8s.io/provisioner-secret-name: rook-csi-cephfs-provisioner
   csi.storage.k8s.io/provisioner-secret-namespace: rook-ceph
-  fsName: myfs
-  pool: myfs-data0
+  fsName: myfs-ec
+  pool: ec-data-pool
 provisioner: rook-ceph.cephfs.csi.ceph.com
 reclaimPolicy: Delete
 ---
@@ -6145,6 +6145,47 @@ spec:
     config: null
     useAllDevices: true
     useAllNodes: true
+---
+apiVersion: ceph.rook.io/v1
+kind: CephFilesystem
+metadata:
+  name: myfs-ec
+  namespace: rook-ceph
+spec:
+  dataPools:
+  - compressionMode: none
+    erasureCoded:
+      codingChunks: 1
+      dataChunks: 2
+  metadataPool:
+    replicated:
+      size: 3
+  metadataServer:
+    activeCount: 1
+    activeStandby: true
+    annotations: null
+    placement:
+      podAntiAffinity:
+        preferredDuringSchedulingIgnoredDuringExecution:
+        - podAffinityTerm:
+            labelSelector:
+              matchExpressions:
+              - key: app
+                operator: In
+                values:
+                - rook-ceph-mds
+            topologyKey: topology.kubernetes.io/zone
+          weight: 100
+        requiredDuringSchedulingIgnoredDuringExecution:
+        - labelSelector:
+            matchExpressions:
+            - key: app
+              operator: In
+              values:
+              - rook-ceph-mds
+          topologyKey: kubernetes.io/hostname
+    resources: null
+  preservePoolsOnDelete: true
 ---
 apiVersion: networking.k8s.io/v1beta1
 kind: Ingress

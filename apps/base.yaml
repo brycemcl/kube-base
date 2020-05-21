@@ -27,6 +27,8 @@ allowVolumeExpansion: true
 apiVersion: storage.k8s.io/v1
 kind: StorageClass
 metadata:
+  annotations:
+    storageclass.kubernetes.io/is-default-class: true
   name: rook-ceph-block
   namespace: rook-ceph
 parameters:
@@ -43,6 +45,26 @@ parameters:
   imageFormat: "2"
   pool: replicated-metadata-pool
 provisioner: rook-ceph.rbd.csi.ceph.com
+reclaimPolicy: Delete
+---
+allowVolumeExpansion: true
+apiVersion: storage.k8s.io/v1
+kind: StorageClass
+metadata:
+  name: rook-cephfs
+  namespace: rook-ceph
+mountOptions: null
+parameters:
+  clusterID: rook-ceph
+  csi.storage.k8s.io/controller-expand-secret-name: rook-csi-cephfs-provisioner
+  csi.storage.k8s.io/controller-expand-secret-namespace: rook-ceph
+  csi.storage.k8s.io/node-stage-secret-name: rook-csi-cephfs-node
+  csi.storage.k8s.io/node-stage-secret-namespace: rook-ceph
+  csi.storage.k8s.io/provisioner-secret-name: rook-csi-cephfs-provisioner
+  csi.storage.k8s.io/provisioner-secret-namespace: rook-ceph
+  fsName: myfs
+  pool: myfs-data0
+provisioner: rook-ceph.cephfs.csi.ceph.com
 reclaimPolicy: Delete
 ---
 apiVersion: apiextensions.k8s.io/v1beta1
@@ -4742,6 +4764,11 @@ subjects:
   namespace: rook-ceph
 ---
 apiVersion: v1
+data:
+  repositories: |
+    - enableLfs: true
+      type: git
+      url: https://github.com/brycemcl/kube-cluster.git
 kind: ConfigMap
 metadata:
   labels:

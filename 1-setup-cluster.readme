@@ -1,0 +1,17 @@
+#1st
+git clone https://github.com/brycemcl/kube-base.git
+
+#update
+cd git pull
+
+
+sudo kubeadm init --config node-config/kubeadm.yaml --upload-certs
+mkdir -p $HOME/.kube
+sudo cp -i /etc/kubernetes/admin.conf $HOME/.kube/config
+sudo chown $(id -u):$(id -g) $HOME/.kube/config
+kubectl taint nodes --all node-role.kubernetes.io/master-
+
+## wait for cluster to come up
+kubectl apply -k .
+kubectl patch secret -n argocd argocd-secret   -p '{"stringData": { "admin.password": "'$(htpasswd -bnBC 10 "" 'newpassword' | tr -d ':\n')'"}}'
+kubectl create secret generic -n metallb-system memberlist --from-literal=secretkey="$(openssl rand -base64 128)"

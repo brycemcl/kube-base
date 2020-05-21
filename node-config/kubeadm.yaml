@@ -1,0 +1,12 @@
+apiVersion: kubeadm.k8s.io/v1beta2
+kind: InitConfiguration
+nodeRegistration:
+  taints: []
+---
+apiVersion: kubeadm.k8s.io/v1beta2
+clusterName: kubernetes
+kind: ClusterConfiguration
+networking:
+  dnsDomain: home.bmclachlan.xyz
+  podsubnet: 10.217.0.0/16
+controlPlaneEndpoint: 127.0.0.1:6442

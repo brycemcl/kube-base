@@ -63,7 +63,7 @@ parameters:
   csi.storage.k8s.io/provisioner-secret-name: rook-csi-cephfs-provisioner
   csi.storage.k8s.io/provisioner-secret-namespace: rook-ceph
   fsName: myfs-ec
-  pool: ec-data-pool
+  pool: ec-pool
 provisioner: rook-ceph.cephfs.csi.ceph.com
 reclaimPolicy: Delete
 ---
@@ -4764,11 +4764,6 @@ subjects:
   namespace: rook-ceph
 ---
 apiVersion: v1
-data:
-  repositories: |
-    - enableLfs: true
-      type: git
-      url: https://github.com/brycemcl/kube-cluster.git
 kind: ConfigMap
 metadata:
   labels:
@@ -6091,6 +6086,19 @@ spec:
   erasureCoded:
     codingChunks: 1
     dataChunks: 2
+---
+apiVersion: ceph.rook.io/v1
+kind: CephBlockPool
+metadata:
+  name: ec-pool
+  namespace: rook-ceph
+spec:
+  annotations: null
+  compressionMode: none
+  erasureCoded:
+    codingChunks: 1
+    dataChunks: 2
+  failureDomain: osd
 ---
 apiVersion: ceph.rook.io/v1
 kind: CephBlockPool

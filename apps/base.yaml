@@ -6195,31 +6195,6 @@ spec:
     resources: null
   preservePoolsOnDelete: true
 ---
-apiVersion: extensions/v1beta1
-kind: Ingress
-metadata:
-  annotations:
-    kubernetes.io/ingress.class: nginx
-    kubernetes.io/tls-acme: "false"
-    nginx.ingress.kubernetes.io/backend-protocol: HTTPS
-    nginx.ingress.kubernetes.io/server-snippet: |
-      proxy_ssl_verify off;
-  name: rook-ceph-mgr-dashboard
-  namespace: rook-ceph
-spec:
-  rules:
-  - host: ceph.home.bmclachlan.xyz
-    http:
-      paths:
-      - backend:
-          serviceName: rook-ceph-mgr-dashboard
-          servicePort: https-dashboard
-        path: /
-  tls:
-  - hosts:
-    - rook-ceph.example.com
-    secretName: rook-ceph.example.com
----
 apiVersion: networking.k8s.io/v1beta1
 kind: Ingress
 metadata:
@@ -6237,6 +6212,24 @@ spec:
       - backend:
           serviceName: argocd-server
           servicePort: https
+---
+apiVersion: networking.k8s.io/v1beta1
+kind: Ingress
+metadata:
+  annotations:
+    kubernetes.io/ingress.class: nginx
+    nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
+  name: rook-ceph-mgr-dashboard
+  namespace: rook-ceph
+spec:
+  rules:
+  - host: ceph.home.bmclachlan.xyz
+    http:
+      paths:
+      - backend:
+          serviceName: rook-ceph-mgr-dashboard
+          servicePort: https-dashboard
+        path: /
 ---
 apiVersion: policy/v1beta1
 kind: PodSecurityPolicy

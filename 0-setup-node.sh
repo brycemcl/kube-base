@@ -2,7 +2,8 @@
 git pull
 sudo sed -i.bak -r '/swap/d' /etc/fstab
 
-sudo apt-get update 
+sudo apt-get update
+sudo apt-get upgrade -y
 sudo apt-get install -y apt-transport-https curl containerd kubectl kubelet kubeadm haproxy apache2-utils
 sudo apt-mark hold kubelet kubeadm kubectl
 sudo cp node-config/containerd.conf /etc/modules-load.d/containerd.conf

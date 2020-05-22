@@ -63,7 +63,7 @@ parameters:
   csi.storage.k8s.io/provisioner-secret-name: rook-csi-cephfs-provisioner
   csi.storage.k8s.io/provisioner-secret-namespace: rook-ceph
   fsName: myfs-ec
-  pool: ec-data-pool
+  pool: ec-pool
 provisioner: rook-ceph.cephfs.csi.ceph.com
 reclaimPolicy: Delete
 ---
@@ -6095,6 +6095,19 @@ spec:
 apiVersion: ceph.rook.io/v1
 kind: CephBlockPool
 metadata:
+  name: ec-pool
+  namespace: rook-ceph
+spec:
+  annotations: null
+  compressionMode: none
+  erasureCoded:
+    codingChunks: 1
+    dataChunks: 2
+  failureDomain: osd
+---
+apiVersion: ceph.rook.io/v1
+kind: CephBlockPool
+metadata:
   name: replicated-metadata-pool
   namespace: rook-ceph
 spec:
@@ -6187,6 +6200,31 @@ spec:
     resources: null
   preservePoolsOnDelete: true
 ---
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  annotations:
+    kubernetes.io/ingress.class: nginx
+    kubernetes.io/tls-acme: "false"
+    nginx.ingress.kubernetes.io/backend-protocol: HTTPS
+    nginx.ingress.kubernetes.io/server-snippet: |
+      proxy_ssl_verify off;
+  name: rook-ceph-mgr-dashboard
+  namespace: rook-ceph
+spec:
+  rules:
+  - host: ceph.home.bmclachlan.xyz
+    http:
+      paths:
+      - backend:
+          serviceName: rook-ceph-mgr-dashboard
+          servicePort: https-dashboard
+        path: /
+  tls:
+  - hosts:
+    - rook-ceph.example.com
+    secretName: rook-ceph.example.com
+---
 apiVersion: networking.k8s.io/v1beta1
 kind: Ingress
 metadata:
@@ -6203,24 +6241,6 @@ spec:
       paths:
       - backend:
           serviceName: argocd-server
-          servicePort: https
----
-apiVersion: networking.k8s.io/v1beta1
-kind: Ingress
-metadata:
-  annotations:
-    kubernetes.io/ingress.class: nginx
-    nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
-    nginx.ingress.kubernetes.io/ssl-passthrough: "true"
-  name: argocd-server-ingress
-  namespace: rook-ceph
-spec:
-  rules:
-  - host: ceph.home.bmclachlan.xyz
-    http:
-      paths:
-      - backend:
-          serviceName: rook-ceph-mgr-dashboard
           servicePort: https
 ---
 apiVersion: policy/v1beta1

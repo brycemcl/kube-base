@@ -1,20 +1,20 @@
-#1st
-git clone https://github.com/brycemcl/kube-base.git
+#Each node
+#1st install
+git clone https://github.com/brycemcl/kube-base.git && cd kube-base && sudo ./0-setup-node.sh
+#Update
+cd kube-base && git pull && sudo ./0-setup-node.sh
 
-#update
-git pull
-
+##connect to 1st node
 cd kube-base
-sudo ./0-setup-node.sh
-
 sudo kubeadm init --config node-config/kubeadm.yaml --upload-certs
 mkdir -p $HOME/.kube
 sudo cp -i /etc/kubernetes/admin.conf $HOME/.kube/config
 sudo chown $(id -u):$(id -g) $HOME/.kube/config
-kubectl taint nodes --all node-role.kubernetes.io/master-
+
+#add other nodes via the printed command from kubeadm
 
 ## wait for cluster to come up
 kubectl apply -k .
-sudo apt install apache2-utils -y
 kubectl patch secret -n argocd argocd-secret   -p '{"stringData": { "admin.password": "'$(htpasswd -bnBC 10 "" 'newpassword' | tr -d ':\n')'"}}'
 kubectl create secret generic -n metallb-system memberlist --from-literal=secretkey="$(openssl rand -base64 128)"
+kubectl taint nodes --all node-role.kubernetes.io/master-

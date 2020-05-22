@@ -1,6 +1,6 @@
 #!/bin/bash
 git pull
-sudo sed -i.bak -r 's/(.+ swap .+)/#\1/' /etc/fstab
+sudo sed -i.bak -r '/swap/d' /etc/fstab
 
 sudo apt-get update 
 sudo apt-get install -y apt-transport-https curl containerd kubectl kubelet kubeadm haproxy apache2-utils

@@ -1,6 +1,6 @@
 #!/bin/bash
-sudo sed -i.bak -r 's/(.+ swap .+)/#\1/' /etc/fstab
 git pull
+sudo sed -i.bak -r 's/(.+ swap .+)/#\1/' /etc/fstab
 
 sudo apt-get update && apt-get install -y apt-transport-https curl containerd kubectl kubelet kubeadm haproxy 
 sudo apt-mark hold kubelet kubeadm kubectl

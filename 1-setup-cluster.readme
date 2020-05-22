@@ -2,7 +2,7 @@
 #1st install
 git clone https://github.com/brycemcl/kube-base.git && cd kube-base && sudo ./0-setup-node.sh
 #Update
-cd kube-base && git pull && sudo ./0-setup-node.sh
+sudo cd kube-base && git pull && sudo ./0-setup-node.sh
 
 ##connect to 1st node
 cd kube-base

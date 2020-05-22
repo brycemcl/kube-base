@@ -4,6 +4,8 @@ git clone https://github.com/brycemcl/kube-base.git
 #update
 git pull
 
+cd kube-base
+sudo ./0-setup-node.sh
 
 sudo kubeadm init --config node-config/kubeadm.yaml --upload-certs
 mkdir -p $HOME/.kube

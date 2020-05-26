@@ -5460,7 +5460,7 @@ spec:
   annotations: null
   cephVersion:
     allowUnsupported: false
-    image: ceph/ceph:v14.2.9
+    image: ceph/ceph:v15
   cleanupPolicy:
     deleteDataDirOnHosts: ""
   continueUpgradeAfterChecksEvenIfNotHealthy: false

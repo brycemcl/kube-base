@@ -5485,8 +5485,7 @@ spec:
   monitoring:
     enabled: false
     rulesNamespace: rook-ceph
-  network:
-    provider: host
+  network: null
   rbdMirroring:
     workers: 0
   removeOSDsIfOutAndSafeToRemove: false

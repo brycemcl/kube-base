@@ -4680,19 +4680,19 @@ metadata:
   namespace: media
 spec:
   ports:
-  - name: port_137
+  - name: port-137
     port: 137
     protocol: UDP
     targetPort: 137
-  - name: port_138
+  - name: port-138
     port: 138
     protocol: UDP
     targetPort: 138
-  - name: port_139
+  - name: port-139
     port: 139
     protocol: TCP
     targetPort: 139
-  - name: port_445
+  - name: port-445
     port: 445
     protocol: TCP
     targetPort: 445

@@ -5097,6 +5097,11 @@ spec:
   selector:
     matchLabels:
       app: smb-server
+  strategy:
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 1
+    type: RollingUpdate
   template:
     metadata:
       labels:

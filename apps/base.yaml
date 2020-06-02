@@ -4379,6 +4379,11 @@ subjects:
   namespace: rook-ceph
 ---
 apiVersion: v1
+data:
+  repositories: |
+    - enableLfs: true
+      type: git
+      url: https://github.com/brycemcl/kube-cluster.git
 kind: ConfigMap
 metadata:
   labels:
@@ -4477,35 +4482,35 @@ data:
     [TV]
             create mask = 0777
             guest ok = Yes
-            path = /srv/tv
+            path = /srv/TV
             read only = No
             hide unreadable = yes
 
     [Movies]
             create mask = 0777
             guest ok = Yes
-            path = /srv/movies
+            path = /srv/Movies
             read only = No
             hide unreadable = yes
 
     [Games]
             create mask = 0777
             guest ok = Yes
-            path = /srv/games
+            path = /srv/Games
             read only = No
             hide unreadable = yes
 
     [Downloads]
             create mask = 0777
             guest ok = Yes
-            path = /srv/downloads
+            path = /srv/Downloads
             read only = No
             hide unreadable = yes
 
     [Videos]
             create mask = 0777
             guest ok = Yes
-            path = /srv/videos
+            path = /srv/Videos
             read only = No
             hide unreadable = yes
 
@@ -4526,7 +4531,7 @@ data:
     [Backups]
             create mask = 0777
             guest ok = Yes
-            path = /srv/backups
+            path = /srv/Backups
             read only = No
             hide unreadable = yes
 kind: ConfigMap

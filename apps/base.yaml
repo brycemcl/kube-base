@@ -5123,7 +5123,7 @@ spec:
     metadata:
       labels:
         app: smb-server
-        configmap-version: "5"
+        configmap-version: "1"
     spec:
       containers:
       - image: brycemclachlan/smb-server:latest

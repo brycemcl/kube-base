@@ -4484,30 +4484,35 @@ data:
             guest ok = Yes
             path = /srv/tv
             read only = No
+            hide unreadable = yes
 
     [Movies]
             create mask = 0777
             guest ok = Yes
             path = /srv/movies
             read only = No
+            hide unreadable = yes
 
     [Games]
             create mask = 0777
             guest ok = Yes
             path = /srv/games
             read only = No
+            hide unreadable = yes
 
     [Downloads]
             create mask = 0777
             guest ok = Yes
             path = /srv/downloads
             read only = No
+            hide unreadable = yes
 
     [Videos]
             create mask = 0777
             guest ok = Yes
             path = /srv/videos
             read only = No
+            hide unreadable = yes
 kind: ConfigMap
 metadata:
   name: samba-config

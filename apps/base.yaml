@@ -4379,11 +4379,6 @@ subjects:
   namespace: rook-ceph
 ---
 apiVersion: v1
-data:
-  repositories: |
-    - enableLfs: true
-      type: git
-      url: https://github.com/brycemcl/kube-cluster.git
 kind: ConfigMap
 metadata:
   labels:
@@ -5145,9 +5140,9 @@ spec:
         - mountPath: /srv/Videos
           name: videos
         - mountPath: /srv/Bryce
-          name: Bryce
+          name: bryce
         - mountPath: /srv/Anacleto
-          name: Anacleto
+          name: anacleto
         - mountPath: /srv/Backups
           name: backups
         - mountPath: /etc/samba/
@@ -5169,12 +5164,12 @@ spec:
       - name: videos
         persistentVolumeClaim:
           claimName: videos
-      - name: Bryce
+      - name: bryce
         persistentVolumeClaim:
-          claimName: Bryce
-      - name: Anacleto
+          claimName: bryce
+      - name: anacleto
         persistentVolumeClaim:
-          claimName: Anacleto
+          claimName: anacleto
       - name: backups
         persistentVolumeClaim:
           claimName: backups
@@ -5852,20 +5847,7 @@ spec:
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
-  name: Anacleto
-  namespace: media
-spec:
-  accessModes:
-  - ReadWriteOnce
-  resources:
-    requests:
-      storage: 5000Gi
-  storageClassName: rook-ceph-block
----
-apiVersion: v1
-kind: PersistentVolumeClaim
-metadata:
-  name: Bryce
+  name: anacleto
   namespace: media
 spec:
   accessModes:
@@ -5879,6 +5861,19 @@ apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
   name: backups
+  namespace: media
+spec:
+  accessModes:
+  - ReadWriteOnce
+  resources:
+    requests:
+      storage: 5000Gi
+  storageClassName: rook-ceph-block
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: bryce
   namespace: media
 spec:
   accessModes:

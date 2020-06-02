@@ -5477,6 +5477,9 @@ spec:
     matchLabels:
       app: smb-server
   template:
+    metadata:
+      labels:
+        app: smb-server
     spec:
       containers:
       - image: brycemclachlan/smb-server:latest

@@ -5512,7 +5512,7 @@ spec:
     metadata:
       labels:
         app: smb-server
-        configmap-version: 1
+        configmap-version: "1"
     spec:
       containers:
       - image: brycemclachlan/smb-server:latest

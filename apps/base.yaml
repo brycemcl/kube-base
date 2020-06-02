@@ -4676,9 +4676,34 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: smb-server
+  annotations:
+    metallb.universe.tf/allow-shared-ip: smb-server
+  name: smb-server-tcp
   namespace: media
 spec:
+  loadBalancerIP: 172.16.1.2
+  ports:
+  - name: port-139
+    port: 139
+    protocol: TCP
+    targetPort: 139
+  - name: port-445
+    port: 445
+    protocol: TCP
+    targetPort: 445
+  selector:
+    app: smb-server
+  type: LoadBalancer
+---
+apiVersion: v1
+kind: Service
+metadata:
+  annotations:
+    metallb.universe.tf/allow-shared-ip: smb-server
+  name: smb-server-udp
+  namespace: media
+spec:
+  loadBalancerIP: 172.16.1.2
   ports:
   - name: port-137
     port: 137
@@ -4688,14 +4713,6 @@ spec:
     port: 138
     protocol: UDP
     targetPort: 138
-  - name: port-139
-    port: 139
-    protocol: TCP
-    targetPort: 139
-  - name: port-445
-    port: 445
-    protocol: TCP
-    targetPort: 445
   selector:
     app: smb-server
   type: LoadBalancer

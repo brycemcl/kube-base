@@ -4379,6 +4379,11 @@ subjects:
   namespace: rook-ceph
 ---
 apiVersion: v1
+data:
+  repositories: |
+    - enableLfs: true
+      type: git
+      url: https://github.com/brycemcl/kube-cluster.git
 kind: ConfigMap
 metadata:
   labels:
@@ -5105,8 +5110,26 @@ spec:
       name: videos
     - mountPath: /etc/samba/
       name: samba-config
+    volumes:
+    - name: tv
+      persistentVolumeClaim:
+        claimName: tv
+    - name: movies
+      persistentVolumeClaim:
+        claimName: movies
+    - name: games
+      persistentVolumeClaim:
+        claimName: games
+    - name: downloads
+      persistentVolumeClaim:
+        claimName: downloads
+    - name: videos
+      persistentVolumeClaim:
+        claimName: videos
+    - configMap:
+        name: samba-config
+      name: samba-config
   replicas: 1
-  restartPolicy: Always
   selector:
     matchLabels:
       app: smb-server
@@ -5115,25 +5138,6 @@ spec:
       labels:
         app: smb-server
         configmap-version: "1"
-  volumes:
-  - name: tv
-    persistentVolumeClaim:
-      claimName: tv
-  - name: movies
-    persistentVolumeClaim:
-      claimName: movies
-  - name: games
-    persistentVolumeClaim:
-      claimName: games
-  - name: downloads
-    persistentVolumeClaim:
-      claimName: downloads
-  - name: videos
-    persistentVolumeClaim:
-      claimName: videos
-  - configMap:
-      name: samba-config
-    name: samba-config
 ---
 apiVersion: apps/v1
 kind: Deployment

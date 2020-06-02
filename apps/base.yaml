@@ -6,6 +6,11 @@ metadata:
 apiVersion: v1
 kind: Namespace
 metadata:
+  name: media
+---
+apiVersion: v1
+kind: Namespace
+metadata:
   labels:
     app: metallb
   name: metallb-system
@@ -4374,6 +4379,11 @@ subjects:
   namespace: rook-ceph
 ---
 apiVersion: v1
+data:
+  repositories: |
+    - enableLfs: true
+      type: git
+      url: https://github.com/brycemcl/kube-cluster.git
 kind: ConfigMap
 metadata:
   labels:
@@ -4454,6 +4464,54 @@ kind: ConfigMap
 metadata:
   name: cilium-config
   namespace: kube-system
+---
+apiVersion: v1
+data:
+  smb.conf: |
+    # Global parameters
+    [global]
+            dns proxy = No
+            map to guest = Bad User
+            name resolve order = bcast host
+            netbios name = SERVER
+            security = USER
+            server string = Server %v
+            idmap config * : backend = tdb
+
+
+    [TV]
+            create mask = 0777
+            guest ok = Yes
+            path = /srv/tv
+            read only = No
+
+    [Movies]
+            create mask = 0777
+            guest ok = Yes
+            path = /srv/movies
+            read only = No
+
+    [Games]
+            create mask = 0777
+            guest ok = Yes
+            path = /srv/games
+            read only = No
+
+    [Downloads]
+            create mask = 0777
+            guest ok = Yes
+            path = /srv/downloads
+            read only = No
+
+    [Videos]
+            create mask = 0777
+            guest ok = Yes
+            path = /srv/videos
+            read only = No
+kind: ConfigMap
+metadata:
+  name: samba-config
+  namespace: media
 ---
 apiVersion: v1
 data:
@@ -4614,6 +4672,28 @@ spec:
     targetPort: 8080
   selector:
     app.kubernetes.io/name: argocd-server
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: smb-server
+  namespace: media
+spec:
+  ports:
+  - port: 137
+    protocol: UDP
+    targetPort: 137
+  - port: 138
+    protocol: UDP
+    targetPort: 138
+  - port: 139
+    protocol: TCP
+    targetPort: 139
+  - port: 445
+    protocol: TCP
+    targetPort: 445
+  selector:
+    app: smb-server
 ---
 apiVersion: apps/v1
 kind: Deployment
@@ -5389,6 +5469,55 @@ spec:
       - effect: NoSchedule
         key: node-role.kubernetes.io/master
 ---
+apiVersion: apps/v1
+kind: ReplicaSet
+metadata:
+  labels:
+    app: smb-server
+  name: smb-server
+  namespace: media
+spec:
+  replicas: 1
+  template:
+    spec:
+      containers:
+      - image: brycemclachlan/smb-server:latest
+        imagePullPolicy: Always
+        name: smb-server
+        restartPolicy: Always
+        volumeMounts:
+        - mountPath: /srv/tv
+          name: tv
+        - mountPath: /srv/movies
+          name: movies
+        - mountPath: /srv/games
+          name: games
+        - mountPath: /srv/downloads
+          name: downloads
+        - mountPath: /srv/videos
+          name: videos
+        - mountPath: /etc/samba/smb.conf
+          name: samba-config
+      volumes:
+      - name: tv
+        persistentVolumeClaim:
+          claimName: tv
+      - name: movies
+        persistentVolumeClaim:
+          claimName: movies
+      - name: games
+        persistentVolumeClaim:
+          claimName: games
+      - name: downloads
+        persistentVolumeClaim:
+          claimName: downloads
+      - name: videos
+        persistentVolumeClaim:
+          claimName: videos
+      - configMap:
+          name: samba-config
+        name: samba-config
+---
 apiVersion: argoproj.io/v1alpha1
 kind: AppProject
 metadata:
@@ -5633,3 +5762,68 @@ spec:
   - projected
   - hostPath
   - flexVolume
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: downloads
+  namespace: media
+spec:
+  accessModes:
+  - ReadWriteOnce
+  resources:
+    requests:
+      storage: 5000Gi
+  storageClassName: rook-ceph-block
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: games
+  namespace: media
+spec:
+  accessModes:
+  - ReadWriteOnce
+  resources:
+    requests:
+      storage: 5000Gi
+  storageClassName: rook-ceph-block
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: movies
+  namespace: media
+spec:
+  accessModes:
+  - ReadWriteOnce
+  resources:
+    requests:
+      storage: 5000Gi
+  storageClassName: rook-ceph-block
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: tv
+  namespace: media
+spec:
+  accessModes:
+  - ReadWriteOnce
+  resources:
+    requests:
+      storage: 5000Gi
+  storageClassName: rook-ceph-block
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: videos
+  namespace: media
+spec:
+  accessModes:
+  - ReadWriteOnce
+  resources:
+    requests:
+      storage: 5000Gi
+  storageClassName: rook-ceph-block

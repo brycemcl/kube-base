@@ -4472,6 +4472,7 @@ data:
             security = USER
             server string = Server %v
             idmap config * : backend = tdb
+            force directory mode = 0777
 
 
     [TV]
@@ -5122,7 +5123,7 @@ spec:
     metadata:
       labels:
         app: smb-server
-        configmap-version: "4"
+        configmap-version: "5"
     spec:
       containers:
       - image: brycemclachlan/smb-server:latest

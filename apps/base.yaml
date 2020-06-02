@@ -5093,42 +5093,6 @@ metadata:
   name: smb-server
   namespace: media
 spec:
-  containers:
-  - image: brycemclachlan/smb-server:latest
-    imagePullPolicy: Always
-    name: smb-server
-    volumeMounts:
-    - mountPath: /srv/tv
-      name: tv
-    - mountPath: /srv/movies
-      name: movies
-    - mountPath: /srv/games
-      name: games
-    - mountPath: /srv/downloads
-      name: downloads
-    - mountPath: /srv/videos
-      name: videos
-    - mountPath: /etc/samba/
-      name: samba-config
-    volumes:
-    - name: tv
-      persistentVolumeClaim:
-        claimName: tv
-    - name: movies
-      persistentVolumeClaim:
-        claimName: movies
-    - name: games
-      persistentVolumeClaim:
-        claimName: games
-    - name: downloads
-      persistentVolumeClaim:
-        claimName: downloads
-    - name: videos
-      persistentVolumeClaim:
-        claimName: videos
-    - configMap:
-        name: samba-config
-      name: samba-config
   replicas: 1
   selector:
     matchLabels:
@@ -5138,6 +5102,44 @@ spec:
       labels:
         app: smb-server
         configmap-version: "1"
+    spec:
+      containers:
+      - image: brycemclachlan/smb-server:latest
+        imagePullPolicy: Always
+        name: smb-server
+        volumeMounts:
+        - mountPath: /srv/tv
+          name: tv
+        - mountPath: /srv/movies
+          name: movies
+        - mountPath: /srv/games
+          name: games
+        - mountPath: /srv/downloads
+          name: downloads
+        - mountPath: /srv/videos
+          name: videos
+        - mountPath: /etc/samba/
+          name: samba-config
+      restartPolicy: Always
+      volumes:
+      - name: tv
+        persistentVolumeClaim:
+          claimName: tv
+      - name: movies
+        persistentVolumeClaim:
+          claimName: movies
+      - name: games
+        persistentVolumeClaim:
+          claimName: games
+      - name: downloads
+        persistentVolumeClaim:
+          claimName: downloads
+      - name: videos
+        persistentVolumeClaim:
+          claimName: videos
+      - configMap:
+          name: samba-config
+        name: samba-config
 ---
 apiVersion: apps/v1
 kind: Deployment

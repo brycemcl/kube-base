@@ -4698,6 +4698,7 @@ spec:
     targetPort: 445
   selector:
     app: smb-server
+  type: LoadBalancer
 ---
 apiVersion: apps/v1
 kind: Deployment

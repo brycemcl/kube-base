@@ -4379,11 +4379,6 @@ subjects:
   namespace: rook-ceph
 ---
 apiVersion: v1
-data:
-  repositories: |
-    - enableLfs: true
-      type: git
-      url: https://github.com/brycemcl/kube-cluster.git
 kind: ConfigMap
 metadata:
   labels:
@@ -4511,6 +4506,27 @@ data:
             create mask = 0777
             guest ok = Yes
             path = /srv/videos
+            read only = No
+            hide unreadable = yes
+
+    [Bryce]
+            create mask = 0777
+            guest ok = Yes
+            path = /srv/Bryce
+            read only = No
+            hide unreadable = yes
+
+    [Anacleto]
+            create mask = 0777
+            guest ok = Yes
+            path = /srv/Anacleto
+            read only = No
+            hide unreadable = yes
+
+    [Backups]
+            create mask = 0777
+            guest ok = Yes
+            path = /srv/backups
             read only = No
             hide unreadable = yes
 kind: ConfigMap
@@ -5123,6 +5139,12 @@ spec:
           name: downloads
         - mountPath: /srv/videos
           name: videos
+        - mountPath: /srv/Bryce
+          name: Bryce
+        - mountPath: /srv/Anacleto
+          name: Anacleto
+        - mountPath: /srv/backups
+          name: backups
         - mountPath: /etc/samba/
           name: samba-config
       restartPolicy: Always
@@ -5275,6 +5297,17 @@ spec:
         name: rook-config
       - emptyDir: {}
         name: default-config-dir
+---
+apiVersion: policy/v1beta1
+kind: PodDisruptionBudget
+metadata:
+  name: smb-server
+  namespace: media
+spec:
+  minAvailable: 0
+  selector:
+    matchLabels:
+      app: smb-server
 ---
 apiVersion: apps/v1
 kind: DaemonSet
@@ -5801,6 +5834,45 @@ spec:
   - projected
   - hostPath
   - flexVolume
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: Anacleto
+  namespace: media
+spec:
+  accessModes:
+  - ReadWriteOnce
+  resources:
+    requests:
+      storage: 5000Gi
+  storageClassName: rook-ceph-block
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: Bryce
+  namespace: media
+spec:
+  accessModes:
+  - ReadWriteOnce
+  resources:
+    requests:
+      storage: 5000Gi
+  storageClassName: rook-ceph-block
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: backups
+  namespace: media
+spec:
+  accessModes:
+  - ReadWriteOnce
+  resources:
+    requests:
+      storage: 5000Gi
+  storageClassName: rook-ceph-block
 ---
 apiVersion: v1
 kind: PersistentVolumeClaim

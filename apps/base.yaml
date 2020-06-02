@@ -4379,6 +4379,11 @@ subjects:
   namespace: rook-ceph
 ---
 apiVersion: v1
+data:
+  repositories: |
+    - enableLfs: true
+      type: git
+      url: https://github.com/brycemcl/kube-cluster.git
 kind: ConfigMap
 metadata:
   labels:
@@ -5122,28 +5127,28 @@ spec:
     metadata:
       labels:
         app: smb-server
-        configmap-version: "2"
+        configmap-version: "3"
     spec:
       containers:
       - image: brycemclachlan/smb-server:latest
         imagePullPolicy: Always
         name: smb-server
         volumeMounts:
-        - mountPath: /srv/tv
+        - mountPath: /srv/TV
           name: tv
-        - mountPath: /srv/movies
+        - mountPath: /srv/Movies
           name: movies
-        - mountPath: /srv/games
+        - mountPath: /srv/Games
           name: games
-        - mountPath: /srv/downloads
+        - mountPath: /srv/Downloads
           name: downloads
-        - mountPath: /srv/videos
+        - mountPath: /srv/Videos
           name: videos
         - mountPath: /srv/Bryce
           name: Bryce
         - mountPath: /srv/Anacleto
           name: Anacleto
-        - mountPath: /srv/backups
+        - mountPath: /srv/Backups
           name: backups
         - mountPath: /etc/samba/
           name: samba-config
@@ -5164,6 +5169,15 @@ spec:
       - name: videos
         persistentVolumeClaim:
           claimName: videos
+      - name: Bryce
+        persistentVolumeClaim:
+          claimName: Bryce
+      - name: Anacleto
+        persistentVolumeClaim:
+          claimName: Anacleto
+      - name: backups
+        persistentVolumeClaim:
+          claimName: backups
       - configMap:
           name: samba-config
         name: samba-config

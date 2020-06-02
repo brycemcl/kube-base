@@ -4379,11 +4379,6 @@ subjects:
   namespace: rook-ceph
 ---
 apiVersion: v1
-data:
-  repositories: |
-    - enableLfs: true
-      type: git
-      url: https://github.com/brycemcl/kube-cluster.git
 kind: ConfigMap
 metadata:
   labels:
@@ -5089,6 +5084,61 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   labels:
+    app: smb-server
+  name: smb-server
+  namespace: media
+spec:
+  containers:
+  - image: brycemclachlan/smb-server:latest
+    imagePullPolicy: Always
+    name: smb-server
+    volumeMounts:
+    - mountPath: /srv/tv
+      name: tv
+    - mountPath: /srv/movies
+      name: movies
+    - mountPath: /srv/games
+      name: games
+    - mountPath: /srv/downloads
+      name: downloads
+    - mountPath: /srv/videos
+      name: videos
+    - mountPath: /etc/samba/
+      name: samba-config
+  replicas: 1
+  restartPolicy: Always
+  selector:
+    matchLabels:
+      app: smb-server
+  template:
+    metadata:
+      labels:
+        app: smb-server
+        configmap-version: "1"
+  volumes:
+  - name: tv
+    persistentVolumeClaim:
+      claimName: tv
+  - name: movies
+    persistentVolumeClaim:
+      claimName: movies
+  - name: games
+    persistentVolumeClaim:
+      claimName: games
+  - name: downloads
+    persistentVolumeClaim:
+      claimName: downloads
+  - name: videos
+    persistentVolumeClaim:
+      claimName: videos
+  - configMap:
+      name: samba-config
+    name: samba-config
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
     app: metallb
     component: controller
   name: controller
@@ -5495,62 +5545,6 @@ spec:
       tolerations:
       - effect: NoSchedule
         key: node-role.kubernetes.io/master
----
-apiVersion: apps/v1
-kind: ReplicaSet
-metadata:
-  labels:
-    app: smb-server
-  name: smb-server
-  namespace: media
-spec:
-  replicas: 1
-  selector:
-    matchLabels:
-      app: smb-server
-  template:
-    metadata:
-      labels:
-        app: smb-server
-        configmap-version: "1"
-    spec:
-      containers:
-      - image: brycemclachlan/smb-server:latest
-        imagePullPolicy: Always
-        name: smb-server
-        volumeMounts:
-        - mountPath: /srv/tv
-          name: tv
-        - mountPath: /srv/movies
-          name: movies
-        - mountPath: /srv/games
-          name: games
-        - mountPath: /srv/downloads
-          name: downloads
-        - mountPath: /srv/videos
-          name: videos
-        - mountPath: /etc/samba/
-          name: samba-config
-      restartPolicy: Always
-      volumes:
-      - name: tv
-        persistentVolumeClaim:
-          claimName: tv
-      - name: movies
-        persistentVolumeClaim:
-          claimName: movies
-      - name: games
-        persistentVolumeClaim:
-          claimName: games
-      - name: downloads
-        persistentVolumeClaim:
-          claimName: downloads
-      - name: videos
-        persistentVolumeClaim:
-          claimName: videos
-      - configMap:
-          name: samba-config
-        name: samba-config
 ---
 apiVersion: argoproj.io/v1alpha1
 kind: AppProject

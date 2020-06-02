@@ -5505,7 +5505,7 @@ spec:
           name: downloads
         - mountPath: /srv/videos
           name: videos
-        - mountPath: /etc/samba/smb.conf
+        - mountPath: /etc/samba/
           name: samba-config
       restartPolicy: Always
       volumes:

@@ -8801,20 +8801,6 @@ metadata:
   namespace: cert-manager
 webhooks:
   failurePolicy: Fail
-  name: webhook.cert-manager.io
-  rules:
-  - apiGroups:
-    - cert-manager.io
-    - acme.cert-manager.io
-    apiVersions:
-    - v1alpha2
-    - v1alpha3
-    operations:
-    - CREATE
-    - UPDATE
-    resources:
-    - '*/*'
-  sideEffects: None
 ---
 apiVersion: admissionregistration.k8s.io/v1beta1
 kind: ValidatingWebhookConfiguration
@@ -11552,6 +11538,11 @@ subjects:
   namespace: rook-ceph
 ---
 apiVersion: v1
+data:
+  repositories: |
+    - enableLfs: true
+      type: git
+      url: https://github.com/brycemcl/kube-cluster.git
 kind: ConfigMap
 metadata:
   labels:

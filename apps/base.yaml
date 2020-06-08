@@ -11509,6 +11509,11 @@ subjects:
   namespace: rook-ceph
 ---
 apiVersion: v1
+data:
+  repositories: |
+    - enableLfs: true
+      type: git
+      url: https://github.com/brycemcl/kube-cluster.git
 kind: ConfigMap
 metadata:
   labels:

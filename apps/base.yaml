@@ -8800,7 +8800,12 @@ metadata:
   name: cert-manager-webhook
   namespace: cert-manager
 webhooks:
-- failurePolicy: Ignore
+- clientConfig:
+    service:
+      name: cert-manager-webhook
+      namespace: cert-manager
+      path: /mutate
+  failurePolicy: Fail
   name: webhook.cert-manager.io
   rules:
   - apiGroups:
@@ -8831,7 +8836,12 @@ metadata:
   name: cert-manager-webhook
   namespace: cert-manager
 webhooks:
-- failurePolicy: Ignore
+- clientConfig:
+    service:
+      name: cert-manager-webhook
+      namespace: cert-manager
+      path: /validate
+  failurePolicy: Fail
   name: webhook.cert-manager.io
   namespaceSelector:
     matchExpressions:

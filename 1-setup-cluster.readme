@@ -1,6 +1,7 @@
 #Each node
 #1st install
 git clone https://github.com/brycemcl/kube-base.git && cd kube-base && sudo ./0-setup-node.sh
+cd kube-base && sudo ./0a-setup-gpu.sh && sudo reboot
 #Update
 cd kube-base && sudo git pull && sudo ./0-setup-node.sh
 

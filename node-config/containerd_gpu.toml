@@ -117,3 +117,5 @@ oom_score = 0
     root_path = ""
     pool_name = ""
     base_image_size = ""
+  [plugins.linux]
+    runtime = "/usr/bin/nvidia-container-runtime"

@@ -1,6 +1,11 @@
 apiVersion: v1
 kind: Namespace
 metadata:
+  name: jcr
+---
+apiVersion: v1
+kind: Namespace
+metadata:
   labels:
     app: metallb
   name: metallb-system
@@ -27,9 +32,10 @@ parameters:
   csi.storage.k8s.io/node-stage-secret-namespace: rook-ceph
   csi.storage.k8s.io/provisioner-secret-name: rook-csi-rbd-provisioner
   csi.storage.k8s.io/provisioner-secret-namespace: rook-ceph
+  dataPool: ec-data-pool
   imageFeatures: layering
   imageFormat: "2"
-  pool: replicapool
+  pool: replicated-metadata-pool
 provisioner: rook-ceph.rbd.csi.ceph.com
 reclaimPolicy: Delete
 ---
@@ -2181,6 +2187,31 @@ subjects:
 ---
 apiVersion: v1
 data:
+  smb.conf: |
+    # Global parameters
+    [global]
+            dns proxy = No
+            map to guest = Bad User
+            name resolve order = bcast host
+            netbios name = SERVER
+            security = USER
+            server string = Server %v
+            idmap config * : backend = tdb
+
+
+    [Server]
+            create mask = 0777
+            guest ok = Yes
+            path = /srv/server
+            read only = No
+            hide unreadable = yes
+kind: ConfigMap
+metadata:
+  name: samba-config
+  namespace: jcr
+---
+apiVersion: v1
+data:
   auto-direct-node-routes: "false"
   bpf-ct-global-any-max: "262144"
   bpf-ct-global-tcp-max: "524288"
@@ -2217,38 +2248,12 @@ metadata:
 ---
 apiVersion: v1
 data:
-  smb.conf: |
-    # Global parameters
-    [global]
-            dns proxy = No
-            map to guest = Bad User
-            name resolve order = bcast host
-            netbios name = SERVER
-            security = USER
-            server string = Server %v
-            idmap config * : backend = tdb
-            force directory mode = 0777
-
-
-    [Server]
-            create mask = 0777
-            guest ok = Yes
-            path = /srv/server
-            read only = No
-            hide unreadable = yes
-kind: ConfigMap
-metadata:
-  name: samba-config
-  namespace: media
----
-apiVersion: v1
-data:
   config: |
     address-pools:
     - name: ip-space
       protocol: layer2
       addresses:
-      - 172.16.1.0/24
+      - 172.16.10.0/24
 kind: ConfigMap
 metadata:
   name: config
@@ -2274,9 +2279,9 @@ metadata:
   annotations:
     metallb.universe.tf/allow-shared-ip: smb-server
   name: smb-server-tcp
-  namespace: media
+  namespace: jcr
 spec:
-  loadBalancerIP: 192.168.1.100
+  loadBalancerIP: 172.16.10.3
   ports:
   - name: port-139
     port: 139
@@ -2296,9 +2301,9 @@ metadata:
   annotations:
     metallb.universe.tf/allow-shared-ip: smb-server
   name: smb-server-udp
-  namespace: media
+  namespace: jcr
 spec:
-  loadBalancerIP: 192.168.1.100
+  loadBalancerIP: 172.16.10.3
   ports:
   - name: port-137
     port: 137
@@ -2311,6 +2316,47 @@ spec:
   selector:
     app: smb-server
   type: LoadBalancer
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: smb-server
+  name: smb-server
+  namespace: jcr
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: smb-server
+  strategy:
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 1
+    type: RollingUpdate
+  template:
+    metadata:
+      labels:
+        app: smb-server
+        configmap-version: "1"
+    spec:
+      containers:
+      - image: brycemclachlan/smb-server:latest
+        imagePullPolicy: Always
+        name: smb-server
+        volumeMounts:
+        - mountPath: /srv/server
+          name: jcr-data
+        - mountPath: /etc/samba/
+          name: samba-config
+      restartPolicy: Always
+      volumes:
+      - name: jcr-data
+        persistentVolumeClaim:
+          claimName: jcr-data
+      - configMap:
+          name: samba-config
+        name: samba-config
 ---
 apiVersion: apps/v1
 kind: Deployment
@@ -2438,47 +2484,6 @@ spec:
       restartPolicy: Always
       serviceAccount: cilium-operator
       serviceAccountName: cilium-operator
----
-apiVersion: apps/v1
-kind: Deployment
-metadata:
-  labels:
-    app: smb-server
-  name: smb-server
-  namespace: media
-spec:
-  replicas: 1
-  selector:
-    matchLabels:
-      app: smb-server
-  strategy:
-    rollingUpdate:
-      maxSurge: 1
-      maxUnavailable: 1
-    type: RollingUpdate
-  template:
-    metadata:
-      labels:
-        app: smb-server
-        configmap-version: "1"
-    spec:
-      containers:
-      - image: brycemclachlan/smb-server:latest
-        imagePullPolicy: Always
-        name: smb-server
-        volumeMounts:
-        - mountPath: /srv/server
-          name: server
-        - mountPath: /etc/samba/
-          name: samba-config
-      restartPolicy: Always
-      volumes:
-      - name: server
-        persistentVolumeClaim:
-          claimName: server
-      - configMap:
-          name: samba-config
-        name: samba-config
 ---
 apiVersion: apps/v1
 kind: Deployment
@@ -2614,7 +2619,7 @@ apiVersion: policy/v1beta1
 kind: PodDisruptionBudget
 metadata:
   name: smb-server
-  namespace: media
+  namespace: jcr
 spec:
   minAvailable: 0
   selector:
@@ -2905,13 +2910,21 @@ spec:
 apiVersion: ceph.rook.io/v1
 kind: CephBlockPool
 metadata:
-  name: replicapool
+  name: ec-data-pool
   namespace: rook-ceph
 spec:
-  failureDomain: host
+  erasureCoded:
+    codingChunks: 1
+    dataChunks: 2
+---
+apiVersion: ceph.rook.io/v1
+kind: CephBlockPool
+metadata:
+  name: replicated-metadata-pool
+  namespace: rook-ceph
+spec:
   replicated:
-    requireSafeReplicaSize: true
-    size: 2
+    size: 3
 ---
 apiVersion: ceph.rook.io/v1
 kind: CephCluster
@@ -3086,12 +3099,12 @@ spec:
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
-  name: server
-  namespace: media
+  name: jcr-data
+  namespace: jcr
 spec:
   accessModes:
   - ReadWriteOnce
   resources:
     requests:
-      storage: 5000Gi
+      storage: 6000Gi
   storageClassName: rook-ceph-block

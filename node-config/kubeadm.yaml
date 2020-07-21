@@ -12,6 +12,3 @@ networking:
   dnsDomain: home.bmclachlan.xyz
   podsubnet: 10.217.0.0/16
 controlPlaneEndpoint: 127.0.0.1:6442
-
-
-	/run/containerd/containerd.sock

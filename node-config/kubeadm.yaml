@@ -2,8 +2,6 @@ apiVersion: kubeadm.k8s.io/v1beta2
 kind: InitConfiguration
 nodeRegistration:
   taints: []
-nodeRegistration:
-  criSocket: "/run/containerd/containerd.sock"
 ---
 apiVersion: kubeadm.k8s.io/v1beta2
 clusterName: kubernetes

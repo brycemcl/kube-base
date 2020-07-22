@@ -2708,19 +2708,6 @@ spec:
     app.kubernetes.io/name: ingress-nginx
   type: LoadBalancer
 ---
-apiVersion: v1
-kind: Service
-metadata:
-  name: smb-server-tcp
-  namespace: jcr
-spec:
-  ports:
-  - port: 8384
-    targetPort: 8384
-  selector:
-    app: smb-server
-  type: LoadBalancer
----
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -2866,6 +2853,9 @@ spec:
         name: syncthing
         ports:
         - containerPort: 8384
+        - containerPort: 22000
+        - containerPort: 21027
+          protocol: UDP
         resources:
           limits:
             cpu: "2"

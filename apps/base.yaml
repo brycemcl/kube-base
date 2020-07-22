@@ -2838,7 +2838,7 @@ spec:
     metadata:
       labels:
         app: smb-server
-        configmap-version: "1"
+        configmap-version: "2"
     spec:
       containers:
       - image: brycemclachlan/smb-server:latest

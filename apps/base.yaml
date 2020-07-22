@@ -2579,7 +2579,7 @@ data:
             name resolve order = bcast host
             netbios name = server
             security = USER
-            server string = Server %v
+            server string = Server
             idmap config * : backend = tdb
 
 

@@ -2586,7 +2586,7 @@ data:
     [server]
             create mask = 0777
             guest ok = Yes
-            path = /srv/server
+            path = /srv/server/server
             read only = No
             hide unreadable = yes
 kind: ConfigMap
@@ -2837,7 +2837,7 @@ spec:
     metadata:
       labels:
         app: smb-server
-        configmap-version: "5"
+        configmap-version: "6"
     spec:
       containers:
       - env:

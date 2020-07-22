@@ -2572,24 +2572,23 @@ metadata:
 apiVersion: v1
 data:
   smb.conf: |
+    # Global parameters
     [global]
-    workgroup = WORKGROUP
-    server string = Server
-    netbios name = server
-    security = user
-    map to guest = bad user
-    name resolve order = bcast host
-    dns proxy = no
+            dns proxy = No
+            map to guest = Bad User
+            name resolve order = bcast host
+            netbios name = SERVER
+            security = USER
+            server string = Server %v
+            idmap config * : backend = tdb
 
-    [server]
-    comment = JCR design files
-    path = /srv/server
-    browsable = yes
-    writable = yes
-    guest ok = yes
-    read only = no
-    create mode = 0777
-    directory mode 0777
+
+    [Server]
+            create mask = 0777
+            guest ok = Yes
+            path = /srv/server
+            read only = No
+            hide unreadable = yes
 kind: ConfigMap
 metadata:
   name: samba-config

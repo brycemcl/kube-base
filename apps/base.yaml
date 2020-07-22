@@ -2720,7 +2720,7 @@ spec:
   loadBalancerIP: 172.16.10.3
   ports:
   - name: port-443
-    port: 443
+    port: 8384
     protocol: TCP
     targetPort: 8384
   - name: port-22000
@@ -2890,6 +2890,7 @@ spec:
         - name: UMASK_SET
           value: "022"
         image: linuxserver/syncthing
+        imagePullPolicy: Always
         name: syncthing
         ports:
         - containerPort: 8384
@@ -2911,6 +2912,13 @@ spec:
       - image: brycemclachlan/smb-server:latest
         imagePullPolicy: Always
         name: smb-server
+        resources:
+          limits:
+            cpu: "2"
+            memory: 1000Mi
+          requests:
+            cpu: ".1"
+            memory: 100Mi
         volumeMounts:
         - mountPath: /srv/server
           name: jcr-data

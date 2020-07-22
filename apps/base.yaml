@@ -2582,7 +2582,6 @@ data:
             server string = Server
             idmap config * : backend = tdb
 
-
     [server]
             create mask = 0777
             guest ok = Yes
@@ -2707,6 +2706,46 @@ spec:
     app.kubernetes.io/component: controller
     app.kubernetes.io/instance: ingress-nginx
     app.kubernetes.io/name: ingress-nginx
+  type: LoadBalancer
+---
+apiVersion: v1
+kind: Service
+metadata:
+  annotations:
+    metallb.universe.tf/allow-shared-ip: smb-server
+  name: smb-server-tcp
+  namespace: jcr
+spec:
+  loadBalancerIP: 172.16.10.3
+  ports:
+  - name: port-443
+    port: 443
+    protocol: TCP
+    targetPort: 8384
+  - name: port-22000
+    port: 22000
+    protocol: TCP
+    targetPort: 22000
+  selector:
+    app: smb-server
+  type: LoadBalancer
+---
+apiVersion: v1
+kind: Service
+metadata:
+  annotations:
+    metallb.universe.tf/allow-shared-ip: smb-server
+  name: smb-server-udp
+  namespace: jcr
+spec:
+  loadBalancerIP: 172.16.10.3
+  ports:
+  - name: port-21027
+    port: 21027
+    protocol: UDP
+    targetPort: 21027
+  selector:
+    app: smb-server
   type: LoadBalancer
 ---
 apiVersion: apps/v1
@@ -2884,6 +2923,7 @@ spec:
           name: jcr-data
         - mountPath: /etc/samba/
           name: samba-config
+      dnsPolicy: ClusterFirstWithHostNet
       hostNetwork: true
       restartPolicy: Always
       volumes:

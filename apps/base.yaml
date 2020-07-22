@@ -2849,7 +2849,7 @@ spec:
     metadata:
       labels:
         app: smb-server
-        configmap-version: "7"
+        configmap-version: "8"
     spec:
       containers:
       - env:
@@ -2864,6 +2864,8 @@ spec:
         image: linuxserver/syncthing
         imagePullPolicy: Always
         name: syncthing
+        ports:
+        - containerPort: 8384
         resources:
           limits:
             cpu: "2"

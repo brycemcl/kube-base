@@ -2709,6 +2709,46 @@ spec:
     app.kubernetes.io/name: ingress-nginx
   type: LoadBalancer
 ---
+apiVersion: v1
+kind: Service
+metadata:
+  annotations:
+    metallb.universe.tf/allow-shared-ip: smb-server
+  name: smb-server-tcp
+  namespace: jcr
+spec:
+  loadBalancerIP: 172.16.10.3
+  ports:
+  - name: port-443
+    port: 443
+    protocol: TCP
+    targetPort: 443
+  - name: port-22000
+    port: 22000
+    protocol: TCP
+    targetPort: 22000
+  selector:
+    app: smb-server
+  type: LoadBalancer
+---
+apiVersion: v1
+kind: Service
+metadata:
+  annotations:
+    metallb.universe.tf/allow-shared-ip: smb-server
+  name: smb-server-udp
+  namespace: jcr
+spec:
+  loadBalancerIP: 172.16.10.3
+  ports:
+  - name: port-21027
+    port: 21027
+    protocol: UDP
+    targetPort: 21027
+  selector:
+    app: smb-server
+  type: LoadBalancer
+---
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -2840,6 +2880,34 @@ spec:
         configmap-version: "5"
     spec:
       containers:
+      - env:
+        - name: PGID
+          value: "1000"
+        - name: PUID
+          value: "1000"
+        - name: TZ
+          value: Canada/Pacific
+        - name: UMASK_SET
+          value: "022"
+        image: linuxserver/syncthing
+        name: syncthing
+        ports:
+        - containerPort: 8384
+        - containerPort: 22000
+        - containerPort: 21027
+          protocol: UDP
+        resources:
+          limits:
+            cpu: "2"
+            memory: 4000Mi
+          requests:
+            cpu: "1"
+            memory: 500Mi
+        volumeMounts:
+        - mountPath: /config
+          name: syncthing-config
+        - mountPath: /data
+          name: jcr-data
       - image: brycemclachlan/smb-server:latest
         imagePullPolicy: Always
         name: smb-server
@@ -2857,6 +2925,9 @@ spec:
       - configMap:
           name: samba-config
         name: samba-config
+      - name: syncthing-config
+        persistentVolumeClaim:
+          claimName: syncthing-config
 ---
 apiVersion: apps/v1
 kind: Deployment
@@ -3693,4 +3764,15 @@ spec:
   resources:
     requests:
       storage: 6000Gi
-  storageClassName: rook-ceph-block
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: syncthing-config
+  namespace: jcr
+spec:
+  accessModes:
+  - ReadWriteOnce
+  resources:
+    requests:
+      storage: 100Gi

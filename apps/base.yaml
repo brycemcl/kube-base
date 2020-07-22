@@ -2711,39 +2711,12 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  annotations:
-    metallb.universe.tf/allow-shared-ip: smb-server
   name: smb-server-tcp
   namespace: jcr
 spec:
-  loadBalancerIP: 172.16.10.3
   ports:
-  - name: port-443
-    port: 443
-    protocol: TCP
+  - port: 443
     targetPort: 8384
-  - name: port-22000
-    port: 22000
-    protocol: TCP
-    targetPort: 22000
-  selector:
-    app: smb-server
-  type: LoadBalancer
----
-apiVersion: v1
-kind: Service
-metadata:
-  annotations:
-    metallb.universe.tf/allow-shared-ip: smb-server
-  name: smb-server-udp
-  namespace: jcr
-spec:
-  loadBalancerIP: 172.16.10.3
-  ports:
-  - name: port-21027
-    port: 21027
-    protocol: UDP
-    targetPort: 21027
   selector:
     app: smb-server
   type: LoadBalancer

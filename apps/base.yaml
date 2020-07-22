@@ -2577,13 +2577,13 @@ data:
             dns proxy = No
             map to guest = Bad User
             name resolve order = bcast host
-            netbios name = SERVER
+            netbios name = server
             security = USER
             server string = Server %v
             idmap config * : backend = tdb
 
 
-    [Server]
+    [server]
             create mask = 0777
             guest ok = Yes
             path = /srv/server

@@ -14,6 +14,11 @@ metadata:
 apiVersion: v1
 kind: Namespace
 metadata:
+  name: media
+---
+apiVersion: v1
+kind: Namespace
+metadata:
   labels:
     app: metallb
   name: metallb-system
@@ -2714,6 +2719,65 @@ metadata:
 ---
 apiVersion: v1
 data:
+  smb.conf: |
+    # Global parameters
+    [global]
+            dns proxy = No
+            map to guest = Bad User
+            name resolve order = bcast host
+            netbios name = media
+            security = USER
+            server string = Server
+            idmap config * : backend = tdb
+
+    [Photos]
+            create mask = 0777
+            guest ok = Yes
+            path = /srv/photos
+            read only = No
+            hide unreadable = yes
+
+    [TV]
+            create mask = 0777
+            guest ok = Yes
+            path = /srv/tv
+            read only = No
+            hide unreadable = yes
+
+    [Movies]
+            create mask = 0777
+            guest ok = Yes
+            path = /srv/movies
+            read only = No
+            hide unreadable = yes
+
+    [Games]
+            create mask = 0777
+            guest ok = Yes
+            path = /srv/games
+            read only = No
+            hide unreadable = yes
+
+    [Downloads]
+            create mask = 0777
+            guest ok = Yes
+            path = /srv/downloads
+            read only = No
+            hide unreadable = yes
+
+    [Videos]
+            create mask = 0777
+            guest ok = Yes
+            path = /srv/videos
+            read only = No
+            hide unreadable = yes
+kind: ConfigMap
+metadata:
+  name: samba-config
+  namespace: media
+---
+apiVersion: v1
+data:
   config: |
     address-pools:
     - name: ip-space
@@ -2862,6 +2926,62 @@ spec:
     targetPort: main-port
   selector:
     k8s-app: metrics-server
+---
+apiVersion: v1
+kind: Service
+metadata:
+  annotations:
+    metallb.universe.tf/allow-shared-ip: smb-server
+  name: smb-server-tcp
+  namespace: media
+spec:
+  loadBalancerIP: 172.16.10.2
+  ports:
+  - name: port-8384
+    port: 443
+    protocol: TCP
+    targetPort: 8384
+  - name: port-22000
+    port: 22000
+    protocol: TCP
+    targetPort: 22000
+  - name: port-139
+    port: 139
+    protocol: TCP
+    targetPort: 139
+  - name: port-445
+    port: 445
+    protocol: TCP
+    targetPort: 445
+  selector:
+    app: smb-server
+  type: LoadBalancer
+---
+apiVersion: v1
+kind: Service
+metadata:
+  annotations:
+    metallb.universe.tf/allow-shared-ip: smb-server
+  name: smb-server-udp
+  namespace: media
+spec:
+  loadBalancerIP: 172.16.10.2
+  ports:
+  - name: port-21027
+    port: 21027
+    protocol: UDP
+    targetPort: 21027
+  - name: port-137
+    port: 137
+    protocol: UDP
+    targetPort: 137
+  - name: port-138
+    port: 138
+    protocol: UDP
+    targetPort: 138
+  selector:
+    app: smb-server
+  type: LoadBalancer
 ---
 apiVersion: apps/v1
 kind: Deployment
@@ -3225,6 +3345,111 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   labels:
+    app: smb-server
+  name: smb-server
+  namespace: media
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: smb-server
+  strategy:
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 1
+    type: RollingUpdate
+  template:
+    metadata:
+      labels:
+        app: smb-server
+        configmap-version: "8"
+    spec:
+      containers:
+      - env:
+        - name: PGID
+          value: "1000"
+        - name: PUID
+          value: "1000"
+        - name: TZ
+          value: Canada/Pacific
+        - name: UMASK_SET
+          value: "022"
+        image: linuxserver/syncthing
+        imagePullPolicy: Always
+        name: syncthing
+        ports:
+        - containerPort: 8384
+        - containerPort: 22000
+        - containerPort: 21027
+          protocol: UDP
+        resources:
+          limits:
+            cpu: "2"
+            memory: 4000Mi
+          requests:
+            cpu: "1"
+            memory: 500Mi
+        volumeMounts:
+        - mountPath: /config
+          name: syncthing-config
+        - mountPath: /data/photos
+          name: photos
+      - image: brycemclachlan/smb-server:latest
+        imagePullPolicy: Always
+        name: smb-server
+        resources:
+          limits:
+            cpu: "2"
+            memory: 1000Mi
+          requests:
+            cpu: ".1"
+            memory: 100Mi
+        volumeMounts:
+        - mountPath: /srv/photos
+          name: photos
+        - mountPath: /srv/tv
+          name: tv
+        - mountPath: /srv/movies
+          name: movies
+        - mountPath: /srv/games
+          name: games
+        - mountPath: /srv/downloads
+          name: downloads
+        - name: videos
+        - mountPath: /etc/samba/
+          name: samba-config
+      dnsPolicy: ClusterFirstWithHostNet
+      restartPolicy: Always
+      volumes:
+      - name: photos
+        persistentVolumeClaim:
+          claimName: photos
+      - name: tv
+        persistentVolumeClaim:
+          claimName: tv
+      - name: movies
+        persistentVolumeClaim:
+          claimName: movies
+      - name: games
+        persistentVolumeClaim:
+          claimName: games
+      - name: downloads
+        persistentVolumeClaim:
+          claimName: downloads
+      - name: videos
+        persistentVolumeClaim:
+          claimName: videos
+      - configMap:
+          name: samba-config
+        name: samba-config
+      - name: syncthing-config
+        persistentVolumeClaim:
+          claimName: syncthing-config
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
     app: metallb
     component: controller
   name: controller
@@ -3356,6 +3581,17 @@ kind: PodDisruptionBudget
 metadata:
   name: smb-server
   namespace: jcr
+spec:
+  minAvailable: 0
+  selector:
+    matchLabels:
+      app: smb-server
+---
+apiVersion: policy/v1beta1
+kind: PodDisruptionBudget
+metadata:
+  name: smb-server
+  namespace: media
 spec:
   minAvailable: 0
   selector:
@@ -3955,3 +4191,87 @@ spec:
   resources:
     requests:
       storage: 100Gi
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: downloads
+  namespace: media
+spec:
+  accessModes:
+  - ReadWriteOnce
+  resources:
+    requests:
+      storage: 6000Gi
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: games
+  namespace: media
+spec:
+  accessModes:
+  - ReadWriteOnce
+  resources:
+    requests:
+      storage: 6000Gi
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: movies
+  namespace: media
+spec:
+  accessModes:
+  - ReadWriteOnce
+  resources:
+    requests:
+      storage: 6000Gi
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: photos
+  namespace: media
+spec:
+  accessModes:
+  - ReadWriteOnce
+  resources:
+    requests:
+      storage: 6000Gi
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: syncthing-config
+  namespace: media
+spec:
+  accessModes:
+  - ReadWriteOnce
+  resources:
+    requests:
+      storage: 100Gi
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: tv
+  namespace: media
+spec:
+  accessModes:
+  - ReadWriteOnce
+  resources:
+    requests:
+      storage: 6000Gi
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: videos
+  namespace: media
+spec:
+  accessModes:
+  - ReadWriteOnce
+  resources:
+    requests:
+      storage: 6000Gi

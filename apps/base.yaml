@@ -3378,6 +3378,15 @@ spec:
         app: smb-server
         configmap-version: "10"
     spec:
+      affinity:
+        podAntiAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+          - labelSelector:
+              matchLabels:
+                app: smb-server
+            namespaces:
+            - jcr
+            topologyKey: kubernetes.io/hostname
       containers:
       - env:
         - name: PGID
@@ -3442,14 +3451,6 @@ spec:
         - mountPath: /etc/samba/
           name: samba-config
       dnsPolicy: ClusterFirstWithHostNet
-      podAntiAffinity:
-        requiredDuringSchedulingIgnoredDuringExecution:
-        - labelSelector:
-            matchLabels:
-              app: smb-server
-          namespaces:
-          - jcr
-          topologyKey: kubernetes.io/hostname
       restartPolicy: Always
       volumes:
       - name: photos

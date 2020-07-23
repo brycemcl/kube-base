@@ -2736,6 +2736,7 @@ data:
             path = /srv/photos
             read only = No
             hide unreadable = yes
+            writable = yes
 
     [TV]
             create mask = 0777
@@ -2743,6 +2744,7 @@ data:
             path = /srv/tv
             read only = No
             hide unreadable = yes
+            writable = yes
 
     [Movies]
             create mask = 0777
@@ -2750,6 +2752,7 @@ data:
             path = /srv/movies
             read only = No
             hide unreadable = yes
+            writable = yes
 
     [Games]
             create mask = 0777
@@ -2757,6 +2760,7 @@ data:
             path = /srv/games
             read only = No
             hide unreadable = yes
+            writable = yes
 
     [Downloads]
             create mask = 0777
@@ -2764,6 +2768,7 @@ data:
             path = /srv/downloads
             read only = No
             hide unreadable = yes
+            writable = yes
 
     [Videos]
             create mask = 0777
@@ -2771,6 +2776,7 @@ data:
             path = /srv/videos
             read only = No
             hide unreadable = yes
+            writable = yes
 
     [Bryce]
             create mask = 0777
@@ -2778,6 +2784,7 @@ data:
             path = /srv/bryce
             read only = No
             hide unreadable = yes
+            writable = yes
 
     [Anacleto]
             create mask = 0777
@@ -2785,6 +2792,7 @@ data:
             path = /srv/anacleto
             read only = No
             hide unreadable = yes
+            writable = yes
 kind: ConfigMap
 metadata:
   name: samba-config
@@ -3376,7 +3384,7 @@ spec:
     metadata:
       labels:
         app: smb-server
-        configmap-version: "10"
+        configmap-version: "11"
     spec:
       affinity:
         podAntiAffinity:

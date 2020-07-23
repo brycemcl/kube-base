@@ -3035,6 +3035,8 @@ spec:
           name: syncthing-config
         - mountPath: /data
           name: jcr-data
+      dnsPolicy: ClusterFirstWithHostNet
+      hostNetwork: true
       volumes:
       - name: jcr-data
         persistentVolumeClaim:

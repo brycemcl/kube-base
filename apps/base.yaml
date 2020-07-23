@@ -3415,7 +3415,8 @@ spec:
           name: games
         - mountPath: /srv/downloads
           name: downloads
-        - name: videos
+        - mountPath: /srv/videos
+          name: videos
         - mountPath: /etc/samba/
           name: samba-config
       dnsPolicy: ClusterFirstWithHostNet

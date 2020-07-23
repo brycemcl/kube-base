@@ -3027,6 +3027,9 @@ spec:
           limits:
             cpu: "2"
             memory: 4000Mi
+          requests:
+            cpu: ".10"
+            memory: 100Mi
         volumeMounts:
         - mountPath: /config
           name: syncthing-config

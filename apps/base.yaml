@@ -2676,6 +2676,9 @@ data:
             path = /srv/server/Server
             read only = No
             hide unreadable = yes
+            writable = yes
+            create mode = 0777
+            force directory mode = 0777
 kind: ConfigMap
 metadata:
   name: samba-config
@@ -2748,6 +2751,7 @@ data:
             hide unreadable = yes
             writable = yes
             create mode = 0777
+            force directory mode = 0777
 
     [Movies]
             create mask = 0777
@@ -2757,6 +2761,7 @@ data:
             hide unreadable = yes
             writable = yes
             create mode = 0777
+            force directory mode = 0777
 
     [Games]
             create mask = 0777
@@ -2766,6 +2771,7 @@ data:
             hide unreadable = yes
             writable = yes
             create mode = 0777
+            force directory mode = 0777
 
     [Downloads]
             create mask = 0777
@@ -2775,6 +2781,7 @@ data:
             hide unreadable = yes
             writable = yes
             create mode = 0777
+            force directory mode = 0777
 
     [Videos]
             create mask = 0777
@@ -2784,6 +2791,7 @@ data:
             hide unreadable = yes
             writable = yes
             create mode = 0777
+            force directory mode = 0777
 
     [Bryce]
             create mask = 0777
@@ -2793,6 +2801,7 @@ data:
             hide unreadable = yes
             writable = yes
             create mode = 0777
+            force directory mode = 0777
 
     [Anacleto]
             create mask = 0777
@@ -2802,6 +2811,7 @@ data:
             hide unreadable = yes
             writable = yes
             create mode = 0777
+            force directory mode = 0777
 kind: ConfigMap
 metadata:
   name: samba-config
@@ -3142,7 +3152,7 @@ spec:
     metadata:
       labels:
         app: smb-server
-        configmap-version: "8"
+        configmap-version: "9"
     spec:
       containers:
       - env:
@@ -3393,7 +3403,7 @@ spec:
     metadata:
       labels:
         app: smb-server
-        configmap-version: "13"
+        configmap-version: "14"
     spec:
       affinity:
         podAntiAffinity:

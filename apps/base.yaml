@@ -2904,7 +2904,6 @@ spec:
         - mountPath: /etc/samba/
           name: samba-config
       dnsPolicy: ClusterFirstWithHostNet
-      hostNetwork: true
       restartPolicy: Always
       volumes:
       - name: jcr-data

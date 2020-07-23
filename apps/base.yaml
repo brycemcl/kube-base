@@ -2771,6 +2771,20 @@ data:
             path = /srv/videos
             read only = No
             hide unreadable = yes
+
+    [Bryce]
+            create mask = 0777
+            guest ok = Yes
+            path = /srv/bryce
+            read only = No
+            hide unreadable = yes
+
+    [Anacleto]
+            create mask = 0777
+            guest ok = Yes
+            path = /srv/anacleto
+            read only = No
+            hide unreadable = yes
 kind: ConfigMap
 metadata:
   name: samba-config
@@ -3362,7 +3376,7 @@ spec:
     metadata:
       labels:
         app: smb-server
-        configmap-version: "8"
+        configmap-version: "9"
     spec:
       containers:
       - env:
@@ -3394,6 +3408,10 @@ spec:
           name: syncthing-config
         - mountPath: /data/photos
           name: photos
+        - mountPath: /data/anacleto
+          name: anacleto
+        - mountPath: /data/bryce
+          name: bryce
       - image: brycemclachlan/smb-server:latest
         imagePullPolicy: Always
         name: smb-server
@@ -3405,6 +3423,10 @@ spec:
             cpu: ".1"
             memory: 100Mi
         volumeMounts:
+        - mountPath: /srv/bryce
+          name: bryce
+        - mountPath: /srv/anacleto
+          name: anacleto
         - mountPath: /srv/photos
           name: photos
         - mountPath: /srv/tv
@@ -3440,6 +3462,12 @@ spec:
       - name: videos
         persistentVolumeClaim:
           claimName: videos
+      - name: anacleto
+        persistentVolumeClaim:
+          claimName: anacleto
+      - name: bryce
+        persistentVolumeClaim:
+          claimName: bryce
       - configMap:
           name: samba-config
         name: samba-config
@@ -4192,6 +4220,30 @@ spec:
   resources:
     requests:
       storage: 100Gi
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: anacleto
+  namespace: media
+spec:
+  accessModes:
+  - ReadWriteOnce
+  resources:
+    requests:
+      storage: 6000Gi
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: bryce
+  namespace: media
+spec:
+  accessModes:
+  - ReadWriteOnce
+  resources:
+    requests:
+      storage: 6000Gi
 ---
 apiVersion: v1
 kind: PersistentVolumeClaim

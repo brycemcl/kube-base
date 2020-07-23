@@ -2738,6 +2738,7 @@ data:
             hide unreadable = yes
             writable = yes
             create mode = 0777
+            force directory mode = 0777
 
     [TV]
             create mask = 0777
@@ -3392,7 +3393,7 @@ spec:
     metadata:
       labels:
         app: smb-server
-        configmap-version: "12"
+        configmap-version: "13"
     spec:
       affinity:
         podAntiAffinity:

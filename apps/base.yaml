@@ -2718,7 +2718,6 @@ metadata:
   name: smb-server-tcp
   namespace: jcr
 spec:
-  loadBalancerIP: 172.16.10.3
   ports:
   - name: port-1
     port: 8384
@@ -2730,7 +2729,6 @@ spec:
     targetPort: 22000
   selector:
     app: smb-server
-  type: LoadBalancer
 ---
 apiVersion: v1
 kind: Service
@@ -2742,7 +2740,6 @@ metadata:
   name: smb-server-udp
   namespace: jcr
 spec:
-  loadBalancerIP: 172.16.10.3
   ports:
   - name: port-3
     port: 21027
@@ -2750,7 +2747,6 @@ spec:
     targetPort: 21027
   selector:
     app: smb-server
-  type: LoadBalancer
 ---
 apiVersion: apps/v1
 kind: Deployment

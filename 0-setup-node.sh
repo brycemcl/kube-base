@@ -8,6 +8,7 @@ cat <<EOF | sudo tee /etc/apt/sources.list.d/kubernetes.list
 deb https://apt.kubernetes.io/ kubernetes-xenial main
 EOF
 
+echo fs.inotify.max_user_watches=524288 | sudo tee -a /etc/sysctl.conf
 sudo apt-get update
 sudo apt-get upgrade -y
 sudo apt-get install -y containerd kubectl kubelet kubeadm haproxy apache2-utils

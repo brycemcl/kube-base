@@ -2713,8 +2713,6 @@ kind: Service
 metadata:
   annotations:
     metallb.universe.tf/allow-shared-ip: smb-server
-  labels:
-    app: smb-server
   name: smb-server-tcp
   namespace: jcr
 spec:

@@ -2708,6 +2708,50 @@ spec:
     app.kubernetes.io/name: ingress-nginx
   type: LoadBalancer
 ---
+apiVersion: v1
+kind: Service
+metadata:
+  annotations:
+    metallb.universe.tf/allow-shared-ip: smb-server
+  labels:
+    app: smb-server
+  name: smb-server-tcp
+  namespace: jcr
+spec:
+  loadBalancerIP: 172.16.10.3
+  ports:
+  - name: port-1
+    port: 8384
+    protocol: TCP
+    targetPort: 8384
+  - name: port-2
+    port: 22000
+    protocol: TCP
+    targetPort: 22000
+  selector:
+    app: smb-server
+  type: LoadBalancer
+---
+apiVersion: v1
+kind: Service
+metadata:
+  annotations:
+    metallb.universe.tf/allow-shared-ip: smb-server
+  labels:
+    app: smb-server
+  name: smb-server-udp
+  namespace: jcr
+spec:
+  loadBalancerIP: 172.16.10.3
+  ports:
+  - name: port-3
+    port: 21027
+    protocol: UDP
+    targetPort: 21027
+  selector:
+    app: smb-server
+  type: LoadBalancer
+---
 apiVersion: apps/v1
 kind: Deployment
 metadata:

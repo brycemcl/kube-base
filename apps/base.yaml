@@ -3376,7 +3376,7 @@ spec:
     metadata:
       labels:
         app: smb-server
-        configmap-version: "9"
+        configmap-version: "10"
     spec:
       containers:
       - env:
@@ -3442,6 +3442,14 @@ spec:
         - mountPath: /etc/samba/
           name: samba-config
       dnsPolicy: ClusterFirstWithHostNet
+      podAntiAffinity:
+        requiredDuringSchedulingIgnoredDuringExecution:
+        - labelSelector:
+            matchLabels:
+              app: smb-server
+          namespaces:
+          - jcr
+          topologyKey: kubernetes.io/hostname
       restartPolicy: Always
       volumes:
       - name: photos

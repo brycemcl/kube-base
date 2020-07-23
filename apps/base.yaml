@@ -3199,7 +3199,7 @@ spec:
       - args:
         - --cert-dir=/tmp
         - --secure-port=4443
-        image: k8s.gcr.io/metrics-server:v0.3.7
+        image: k8s.gcr.io/metrics-server-amd64:v0.3.6
         imagePullPolicy: IfNotPresent
         name: metrics-server
         ports:
@@ -3214,6 +3214,7 @@ spec:
         - mountPath: /tmp
           name: tmp-dir
       nodeSelector:
+        kubernetes.io/arch: amd64
         kubernetes.io/os: linux
       serviceAccountName: metrics-server
       volumes:

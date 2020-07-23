@@ -2722,6 +2722,28 @@ spec:
     port: 443
     protocol: TCP
     targetPort: 8384
+  - name: port-2
+    port: 22000
+    protocol: TCP
+    targetPort: 22000
+  selector:
+    app: smb-server
+  type: LoadBalancer
+---
+apiVersion: v1
+kind: Service
+metadata:
+  annotations:
+    metallb.universe.tf/allow-shared-ip: smb-server
+  name: smb-server-udp
+  namespace: jcr
+spec:
+  loadBalancerIP: 172.16.10.3
+  ports:
+  - name: port-3
+    port: 21027
+    protocol: UDP
+    targetPort: 21027
   selector:
     app: smb-server
   type: LoadBalancer

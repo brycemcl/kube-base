@@ -3709,9 +3709,15 @@ spec:
   dashboard:
     enabled: true
   dataDirHostPath: /var/lib/rook
+  mgr:
+    modules:
+    - enabled: true
+      name: pg_autoscaler
   mon:
     allowMultiplePerNode: true
     count: 1
+  network:
+    provider: host
   storage:
     useAllDevices: true
     useAllNodes: true

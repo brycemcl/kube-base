@@ -14,8 +14,7 @@ sudo chown $(id -u):$(id -g) $HOME/.kube/config
 #add other nodes via the printed command from kubeadm
 
 ## wait for cluster to come up
-kubectl apply -k .
-kubectl taint nodes --all node-role.kubernetes.io/master-
+kubectl apply -k . && kubectl taint nodes --all node-role.kubernetes.io/master-
 
 
 ##if using metallb

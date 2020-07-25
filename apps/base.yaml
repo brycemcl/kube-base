@@ -173,7 +173,7 @@ data:
             dns proxy = No
             map to guest = Bad User
             name resolve order = bcast host
-            netbios name = server
+            netbios name = server-backup
             security = USER
             server string = Server
             idmap config * : backend = tdb
@@ -271,8 +271,8 @@ spec:
           protocol: UDP
         resources:
           limits:
-            cpu: "2"
-            memory: 4000Mi
+            cpu: "1"
+            memory: 2000Mi
           requests:
             cpu: ".10"
             memory: 100Mi
@@ -281,8 +281,24 @@ spec:
           name: syncthing-config
         - mountPath: /data
           name: jcr-data
+      - image: brycemclachlan/smb-server:latest
+        imagePullPolicy: Always
+        name: smb-server
+        resources:
+          limits:
+            cpu: "1"
+            memory: 1000Mi
+          requests:
+            cpu: ".1"
+            memory: 100Mi
+        volumeMounts:
+        - mountPath: /srv/server
+          name: jcr-data
+        - mountPath: /etc/samba/
+          name: samba-config
       dnsPolicy: ClusterFirstWithHostNet
       hostNetwork: true
+      restartPolicy: Always
       volumes:
       - name: jcr-data
         persistentVolumeClaim:

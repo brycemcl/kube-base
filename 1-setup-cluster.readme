@@ -1,7 +1,6 @@
 #Each node
 #1st install
 git clone -b jcr-office https://github.com/brycemcl/kube-base.git && cd kube-base && sudo ./0-setup-node.sh
-cd kube-base && sudo ./0a-setup-gpu.sh && sudo reboot
 #Update
 cd kube-base && sudo git pull && sudo ./0-setup-node.sh
 
@@ -16,5 +15,8 @@ sudo chown $(id -u):$(id -g) $HOME/.kube/config
 
 ## wait for cluster to come up
 kubectl apply -k .
-kubectl create secret generic -n metallb-system memberlist --from-literal=secretkey="$(openssl rand -base64 128)"
 kubectl taint nodes --all node-role.kubernetes.io/master-
+
+
+##if using metallb
+kubectl create secret generic -n metallb-system memberlist --from-literal=secretkey="$(openssl rand -base64 128)"

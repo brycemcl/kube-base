@@ -3009,62 +3009,6 @@ spec:
   selector:
     k8s-app: metrics-server
 ---
-apiVersion: v1
-kind: Service
-metadata:
-  annotations:
-    metallb.universe.tf/allow-shared-ip: smb-server
-  name: smb-server-tcp
-  namespace: media
-spec:
-  loadBalancerIP: 172.16.10.2
-  ports:
-  - name: port-8384
-    port: 443
-    protocol: TCP
-    targetPort: 8384
-  - name: port-22000
-    port: 22000
-    protocol: TCP
-    targetPort: 22000
-  - name: port-139
-    port: 139
-    protocol: TCP
-    targetPort: 139
-  - name: port-445
-    port: 445
-    protocol: TCP
-    targetPort: 445
-  selector:
-    app: smb-server
-  type: LoadBalancer
----
-apiVersion: v1
-kind: Service
-metadata:
-  annotations:
-    metallb.universe.tf/allow-shared-ip: smb-server
-  name: smb-server-udp
-  namespace: media
-spec:
-  loadBalancerIP: 172.16.10.2
-  ports:
-  - name: port-21027
-    port: 21027
-    protocol: UDP
-    targetPort: 21027
-  - name: port-137
-    port: 137
-    protocol: UDP
-    targetPort: 137
-  - name: port-138
-    port: 138
-    protocol: UDP
-    targetPort: 138
-  selector:
-    app: smb-server
-  type: LoadBalancer
----
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -3193,7 +3137,7 @@ spec:
     metadata:
       labels:
         app: smb-server
-        configmap-version: "10"
+        configmap-version: "11"
     spec:
       affinity:
         podAntiAffinity:
@@ -3420,7 +3364,7 @@ spec:
     metadata:
       labels:
         app: smb-server
-        configmap-version: "14"
+        configmap-version: "15"
     spec:
       affinity:
         podAntiAffinity:

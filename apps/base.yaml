@@ -3170,6 +3170,15 @@ spec:
         app: smb-server
         configmap-version: "9"
     spec:
+      affinity:
+        podAntiAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+          - labelSelector:
+              matchLabels:
+                app: smb-server
+            namespaces:
+            - media
+            topologyKey: kubernetes.io/hostname
       containers:
       - env:
         - name: PGID

@@ -628,12 +628,15 @@ metadata:
     app.kubernetes.io/instance: ingress-nginx
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: ingress-nginx
-    app.kubernetes.io/version: 0.32.0
-    helm.sh/chart: ingress-nginx-2.1.0
+    app.kubernetes.io/version: 0.34.1
+    helm.sh/chart: ingress-nginx-2.11.1
   name: ingress-nginx-admission
   namespace: ingress-nginx
 webhooks:
-- clientConfig:
+- admissionReviewVersions:
+  - v1
+  - v1beta1
+  clientConfig:
     service:
       name: ingress-nginx-controller-admission
       namespace: ingress-nginx
@@ -651,6 +654,7 @@ webhooks:
     - UPDATE
     resources:
     - ingresses
+  sideEffects: None
 ---
 apiVersion: v1
 kind: ServiceAccount
@@ -663,8 +667,8 @@ metadata:
     app.kubernetes.io/instance: ingress-nginx
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: ingress-nginx
-    app.kubernetes.io/version: 0.32.0
-    helm.sh/chart: ingress-nginx-2.1.0
+    app.kubernetes.io/version: 0.34.1
+    helm.sh/chart: ingress-nginx-2.11.1
   name: ingress-nginx-admission
   namespace: ingress-nginx
 ---
@@ -676,8 +680,8 @@ metadata:
     app.kubernetes.io/instance: ingress-nginx
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: ingress-nginx
-    app.kubernetes.io/version: 0.32.0
-    helm.sh/chart: ingress-nginx-2.1.0
+    app.kubernetes.io/version: 0.34.1
+    helm.sh/chart: ingress-nginx-2.11.1
   name: ingress-nginx
   namespace: ingress-nginx
 ---
@@ -777,8 +781,8 @@ metadata:
     app.kubernetes.io/instance: ingress-nginx
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: ingress-nginx
-    app.kubernetes.io/version: 0.32.0
-    helm.sh/chart: ingress-nginx-2.1.0
+    app.kubernetes.io/version: 0.34.1
+    helm.sh/chart: ingress-nginx-2.11.1
   name: ingress-nginx-admission
   namespace: ingress-nginx
 rules:
@@ -798,8 +802,8 @@ metadata:
     app.kubernetes.io/instance: ingress-nginx
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: ingress-nginx
-    app.kubernetes.io/version: 0.32.0
-    helm.sh/chart: ingress-nginx-2.1.0
+    app.kubernetes.io/version: 0.34.1
+    helm.sh/chart: ingress-nginx-2.11.1
   name: ingress-nginx
   namespace: ingress-nginx
 rules:
@@ -1131,8 +1135,8 @@ metadata:
     app.kubernetes.io/instance: ingress-nginx
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: ingress-nginx
-    app.kubernetes.io/version: 0.32.0
-    helm.sh/chart: ingress-nginx-2.1.0
+    app.kubernetes.io/version: 0.34.1
+    helm.sh/chart: ingress-nginx-2.11.1
   name: ingress-nginx-admission
   namespace: ingress-nginx
 rules:
@@ -1151,8 +1155,8 @@ metadata:
     app.kubernetes.io/instance: ingress-nginx
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: ingress-nginx
-    app.kubernetes.io/version: 0.32.0
-    helm.sh/chart: ingress-nginx-2.1.0
+    app.kubernetes.io/version: 0.34.1
+    helm.sh/chart: ingress-nginx-2.11.1
   name: ingress-nginx
   namespace: ingress-nginx
 rules:
@@ -1386,7 +1390,6 @@ rules:
 - apiGroups:
   - ""
   resources:
-  - nodes
   - services
   - endpoints
   - namespaces
@@ -1409,6 +1412,14 @@ rules:
   - ciliumidentities/status
   verbs:
   - '*'
+- apiGroups:
+  - apiextensions.k8s.io
+  resources:
+  - customresourcedefinitions
+  verbs:
+  - get
+  - list
+  - watch
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRole
@@ -1481,7 +1492,6 @@ rules:
   - ciliumnodes
   - ciliumnodes/status
   - ciliumidentities
-  - ciliumidentities/status
   verbs:
   - '*'
 ---
@@ -2091,8 +2101,8 @@ metadata:
     app.kubernetes.io/instance: ingress-nginx
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: ingress-nginx
-    app.kubernetes.io/version: 0.32.0
-    helm.sh/chart: ingress-nginx-2.1.0
+    app.kubernetes.io/version: 0.34.1
+    helm.sh/chart: ingress-nginx-2.11.1
   name: ingress-nginx-admission
   namespace: ingress-nginx
 roleRef:
@@ -2112,8 +2122,8 @@ metadata:
     app.kubernetes.io/instance: ingress-nginx
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: ingress-nginx
-    app.kubernetes.io/version: 0.32.0
-    helm.sh/chart: ingress-nginx-2.1.0
+    app.kubernetes.io/version: 0.34.1
+    helm.sh/chart: ingress-nginx-2.11.1
   name: ingress-nginx
   namespace: ingress-nginx
 roleRef:
@@ -2356,8 +2366,8 @@ metadata:
     app.kubernetes.io/instance: ingress-nginx
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: ingress-nginx
-    app.kubernetes.io/version: 0.32.0
-    helm.sh/chart: ingress-nginx-2.1.0
+    app.kubernetes.io/version: 0.34.1
+    helm.sh/chart: ingress-nginx-2.11.1
   name: ingress-nginx-admission
   namespace: ingress-nginx
 roleRef:
@@ -2376,8 +2386,8 @@ metadata:
     app.kubernetes.io/instance: ingress-nginx
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: ingress-nginx
-    app.kubernetes.io/version: 0.32.0
-    helm.sh/chart: ingress-nginx-2.1.0
+    app.kubernetes.io/version: 0.34.1
+    helm.sh/chart: ingress-nginx-2.11.1
   name: ingress-nginx
   namespace: ingress-nginx
 roleRef:
@@ -2652,8 +2662,8 @@ metadata:
     app.kubernetes.io/instance: ingress-nginx
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: ingress-nginx
-    app.kubernetes.io/version: 0.32.0
-    helm.sh/chart: ingress-nginx-2.1.0
+    app.kubernetes.io/version: 0.34.1
+    helm.sh/chart: ingress-nginx-2.11.1
   name: ingress-nginx-controller
   namespace: ingress-nginx
 ---
@@ -2687,32 +2697,38 @@ metadata:
 apiVersion: v1
 data:
   auto-direct-node-routes: "false"
-  bpf-ct-global-any-max: "262144"
-  bpf-ct-global-tcp-max: "524288"
+  bpf-map-dynamic-size-ratio: "0.0025"
   bpf-policy-map-max: "16384"
   cluster-name: default
+  cluster-pool-ipv4-cidr: 10.0.0.0/8
+  cluster-pool-ipv4-mask-size: "24"
   debug: "false"
+  disable-cnp-status-updates: "true"
   enable-auto-protect-node-port-range: "true"
+  enable-bpf-clock-probe: "true"
+  enable-bpf-masquerade: "true"
   enable-endpoint-health-checking: "true"
-  enable-external-ips: "false"
-  enable-host-reachable-services: "false"
+  enable-health-check-nodeport: "true"
   enable-ipv4: "true"
   enable-ipv6: "false"
-  enable-node-port: "false"
   enable-remote-node-identity: "true"
+  enable-session-affinity: "true"
   enable-well-known-identities: "false"
   enable-xt-socket-fallback: "true"
   identity-allocation-mode: crd
   install-iptables-rules: "true"
+  ipam: cluster-pool
+  k8s-require-ipv4-pod-cidr: "true"
+  k8s-require-ipv6-pod-cidr: "false"
   kube-proxy-replacement: probe
   masquerade: "true"
   monitor-aggregation: medium
   monitor-aggregation-flags: all
   monitor-aggregation-interval: 5s
   node-port-bind-protection: "true"
+  operator-api-serve-addr: 127.0.0.1:9234
   preallocate-bpf-maps: "false"
   sidecar-istio-proxy-image: cilium/istio_proxy
-  tofqdns-enable-poller: "false"
   tunnel: vxlan
   wait-bpf-mount: "false"
 kind: ConfigMap
@@ -2852,8 +2868,8 @@ metadata:
     app.kubernetes.io/instance: ingress-nginx
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: ingress-nginx
-    app.kubernetes.io/version: 0.32.0
-    helm.sh/chart: ingress-nginx-2.1.0
+    app.kubernetes.io/version: 0.34.1
+    helm.sh/chart: ingress-nginx-2.11.1
   name: ingress-nginx-controller-admission
   namespace: ingress-nginx
 spec:
@@ -3032,8 +3048,8 @@ metadata:
     app.kubernetes.io/instance: ingress-nginx
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: ingress-nginx
-    app.kubernetes.io/version: 0.32.0
-    helm.sh/chart: ingress-nginx-2.1.0
+    app.kubernetes.io/version: 0.34.1
+    helm.sh/chart: ingress-nginx-2.11.1
   name: ingress-nginx-controller
   namespace: ingress-nginx
 spec:
@@ -3069,7 +3085,7 @@ spec:
           valueFrom:
             fieldRef:
               fieldPath: metadata.namespace
-        image: quay.io/kubernetes-ingress-controller/nginx-ingress-controller:0.32.0
+        image: us.gcr.io/k8s-artifacts-prod/ingress-nginx/controller:v0.34.1@sha256:0e072dddd1f7f8fc8909a2ca6f65e76c5f0d2fcfb8be47935ae3457e8bbceb20
         imagePullPolicy: IfNotPresent
         lifecycle:
           preStop:
@@ -3077,7 +3093,7 @@ spec:
               command:
               - /wait-shutdown
         livenessProbe:
-          failureThreshold: 3
+          failureThreshold: 5
           httpGet:
             path: /healthz
             port: 10254
@@ -3241,62 +3257,25 @@ spec:
     spec:
       containers:
       - args:
+        - --config-dir=/tmp/cilium/config-map
         - --debug=$(CILIUM_DEBUG)
-        - --identity-allocation-mode=$(CILIUM_IDENTITY_ALLOCATION_MODE)
-        - --synchronize-k8s-nodes=true
         command:
-        - cilium-operator
+        - cilium-operator-generic
         env:
-        - name: CILIUM_K8S_NAMESPACE
-          valueFrom:
-            fieldRef:
-              apiVersion: v1
-              fieldPath: metadata.namespace
         - name: K8S_NODE_NAME
           valueFrom:
             fieldRef:
               apiVersion: v1
               fieldPath: spec.nodeName
+        - name: CILIUM_K8S_NAMESPACE
+          valueFrom:
+            fieldRef:
+              apiVersion: v1
+              fieldPath: metadata.namespace
         - name: CILIUM_DEBUG
           valueFrom:
             configMapKeyRef:
               key: debug
-              name: cilium-config
-              optional: true
-        - name: CILIUM_CLUSTER_NAME
-          valueFrom:
-            configMapKeyRef:
-              key: cluster-name
-              name: cilium-config
-              optional: true
-        - name: CILIUM_CLUSTER_ID
-          valueFrom:
-            configMapKeyRef:
-              key: cluster-id
-              name: cilium-config
-              optional: true
-        - name: CILIUM_IPAM
-          valueFrom:
-            configMapKeyRef:
-              key: ipam
-              name: cilium-config
-              optional: true
-        - name: CILIUM_DISABLE_ENDPOINT_CRD
-          valueFrom:
-            configMapKeyRef:
-              key: disable-endpoint-crd
-              name: cilium-config
-              optional: true
-        - name: CILIUM_KVSTORE
-          valueFrom:
-            configMapKeyRef:
-              key: kvstore
-              name: cilium-config
-              optional: true
-        - name: CILIUM_KVSTORE_OPT
-          valueFrom:
-            configMapKeyRef:
-              key: kvstore-opt
               name: cilium-config
               optional: true
         - name: AWS_ACCESS_KEY_ID
@@ -3317,13 +3296,7 @@ spec:
               key: AWS_DEFAULT_REGION
               name: cilium-aws
               optional: true
-        - name: CILIUM_IDENTITY_ALLOCATION_MODE
-          valueFrom:
-            configMapKeyRef:
-              key: identity-allocation-mode
-              name: cilium-config
-              optional: true
-        image: docker.io/cilium/operator:v1.7.4
+        image: docker.io/cilium/operator-generic:v1.8.2
         imagePullPolicy: IfNotPresent
         livenessProbe:
           httpGet:
@@ -3335,10 +3308,19 @@ spec:
           periodSeconds: 10
           timeoutSeconds: 3
         name: cilium-operator
+        volumeMounts:
+        - mountPath: /tmp/cilium/config-map
+          name: cilium-config-path
+          readOnly: true
       hostNetwork: true
+      priorityClassName: system-cluster-critical
       restartPolicy: Always
       serviceAccount: cilium-operator
       serviceAccountName: cilium-operator
+      volumes:
+      - configMap:
+          name: cilium-config
+        name: cilium-config-path
 ---
 apiVersion: apps/v1
 kind: Deployment
@@ -3697,6 +3679,16 @@ spec:
       labels:
         k8s-app: cilium
     spec:
+      affinity:
+        podAntiAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+          - labelSelector:
+              matchExpressions:
+              - key: k8s-app
+                operator: In
+                values:
+                - cilium
+            topologyKey: kubernetes.io/hostname
       containers:
       - args:
         - --config-dir=/tmp/cilium/config-map
@@ -3739,7 +3731,7 @@ spec:
               key: custom-cni-conf
               name: cilium-config
               optional: true
-        image: docker.io/cilium/cilium:v1.7.4
+        image: docker.io/cilium/cilium:v1.8.2
         imagePullPolicy: IfNotPresent
         lifecycle:
           postStart:
@@ -3752,24 +3744,30 @@ spec:
               command:
               - /cni-uninstall.sh
         livenessProbe:
-          exec:
-            command:
-            - cilium
-            - status
-            - --brief
           failureThreshold: 10
+          httpGet:
+            host: 127.0.0.1
+            httpHeaders:
+            - name: brief
+              value: "true"
+            path: /healthz
+            port: 9876
+            scheme: HTTP
           initialDelaySeconds: 120
           periodSeconds: 30
           successThreshold: 1
           timeoutSeconds: 5
         name: cilium-agent
         readinessProbe:
-          exec:
-            command:
-            - cilium
-            - status
-            - --brief
           failureThreshold: 3
+          httpGet:
+            host: 127.0.0.1
+            httpHeaders:
+            - name: brief
+              value: "true"
+            path: /healthz
+            port: 9876
+            scheme: HTTP
           initialDelaySeconds: 5
           periodSeconds: 30
           successThreshold: 1
@@ -3823,9 +3821,13 @@ spec:
               key: wait-bpf-mount
               name: cilium-config
               optional: true
-        image: docker.io/cilium/cilium:v1.7.4
+        image: docker.io/cilium/cilium:v1.8.2
         imagePullPolicy: IfNotPresent
         name: clean-cilium-state
+        resources:
+          requests:
+            cpu: 100m
+            memory: 100Mi
         securityContext:
           capabilities:
             add:
@@ -3971,8 +3973,8 @@ metadata:
     app.kubernetes.io/instance: ingress-nginx
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: ingress-nginx
-    app.kubernetes.io/version: 0.32.0
-    helm.sh/chart: ingress-nginx-2.1.0
+    app.kubernetes.io/version: 0.34.1
+    helm.sh/chart: ingress-nginx-2.11.1
   name: ingress-nginx-admission-create
   namespace: ingress-nginx
 spec:
@@ -3983,8 +3985,8 @@ spec:
         app.kubernetes.io/instance: ingress-nginx
         app.kubernetes.io/managed-by: Helm
         app.kubernetes.io/name: ingress-nginx
-        app.kubernetes.io/version: 0.32.0
-        helm.sh/chart: ingress-nginx-2.1.0
+        app.kubernetes.io/version: 0.34.1
+        helm.sh/chart: ingress-nginx-2.11.1
       name: ingress-nginx-admission-create
     spec:
       containers:
@@ -3993,7 +3995,7 @@ spec:
         - --host=ingress-nginx-controller-admission,ingress-nginx-controller-admission.ingress-nginx.svc
         - --namespace=ingress-nginx
         - --secret-name=ingress-nginx-admission
-        image: jettech/kube-webhook-certgen:v1.2.0
+        image: docker.io/jettech/kube-webhook-certgen:v1.2.2
         imagePullPolicy: IfNotPresent
         name: create
       restartPolicy: OnFailure
@@ -4013,8 +4015,8 @@ metadata:
     app.kubernetes.io/instance: ingress-nginx
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: ingress-nginx
-    app.kubernetes.io/version: 0.32.0
-    helm.sh/chart: ingress-nginx-2.1.0
+    app.kubernetes.io/version: 0.34.1
+    helm.sh/chart: ingress-nginx-2.11.1
   name: ingress-nginx-admission-patch
   namespace: ingress-nginx
 spec:
@@ -4025,8 +4027,8 @@ spec:
         app.kubernetes.io/instance: ingress-nginx
         app.kubernetes.io/managed-by: Helm
         app.kubernetes.io/name: ingress-nginx
-        app.kubernetes.io/version: 0.32.0
-        helm.sh/chart: ingress-nginx-2.1.0
+        app.kubernetes.io/version: 0.34.1
+        helm.sh/chart: ingress-nginx-2.11.1
       name: ingress-nginx-admission-patch
     spec:
       containers:
@@ -4037,7 +4039,7 @@ spec:
         - --patch-mutating=false
         - --secret-name=ingress-nginx-admission
         - --patch-failure-policy=Fail
-        image: jettech/kube-webhook-certgen:v1.2.0
+        image: docker.io/jettech/kube-webhook-certgen:v1.2.2
         imagePullPolicy: IfNotPresent
         name: patch
       restartPolicy: OnFailure
@@ -4103,7 +4105,42 @@ spec:
   rbdMirroring:
     workers: 0
   removeOSDsIfOutAndSafeToRemove: false
-  resources: null
+  resources:
+    crashcollector:
+      limits:
+        cpu: ".25"
+        memory: 100Mi
+      requests:
+        cpu: "1"
+        memory: 100Mi
+    mgr:
+      limits:
+        cpu: ".25"
+        memory: 512Mi
+      requests:
+        cpu: "1"
+        memory: 768Mi
+    mon:
+      limits:
+        cpu: ".25"
+        memory: 1024Mi
+      requests:
+        cpu: "1"
+        memory: 1536Mi
+    osd:
+      limits:
+        cpu: ".25"
+        memory: 2048Mi
+      requests:
+        cpu: "1"
+        memory: 3072Mi
+    prepareosd:
+      limits:
+        cpu: ".25"
+        memory: 100Mi
+      requests:
+        cpu: "1"
+        memory: 100Mi
   skipUpgradeChecks: false
   storage:
     config: null

@@ -3407,7 +3407,7 @@ spec:
           value: Canada/Pacific
         - name: UMASK_SET
           value: "022"
-        image: linuxserver/syncthing
+      - image: linuxserver/syncthing
         imagePullPolicy: Always
         name: syncthing
         ports:

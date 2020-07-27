@@ -3009,6 +3009,98 @@ spec:
   selector:
     k8s-app: metrics-server
 ---
+apiVersion: v1
+kind: Service
+metadata:
+  annotations:
+    metallb.universe.tf/allow-shared-ip: smb-server
+  name: smb-server-tcp
+  namespace: media
+spec:
+  loadBalancerIP: 172.16.10.2
+  ports:
+  - name: port-8384
+    port: 443
+    protocol: TCP
+    targetPort: 8384
+  - name: port-22000
+    port: 22000
+    protocol: TCP
+    targetPort: 22000
+  - name: port-139
+    port: 139
+    protocol: TCP
+    targetPort: 139
+  - name: port-445
+    port: 445
+    protocol: TCP
+    targetPort: 445
+  - name: port-32400
+    port: 32400
+    protocol: TCP
+    targetPort: 32400
+  - name: port-3005
+    port: 3005
+    protocol: TCP
+    targetPort: 3005
+  - name: port-8324
+    port: 8324
+    protocol: TCP
+    targetPort: 8324
+  - name: port-32469
+    port: 32469
+    protocol: TCP
+    targetPort: 32469
+  selector:
+    app: smb-server
+  type: LoadBalancer
+---
+apiVersion: v1
+kind: Service
+metadata:
+  annotations:
+    metallb.universe.tf/allow-shared-ip: smb-server
+  name: smb-server-udp
+  namespace: media
+spec:
+  loadBalancerIP: 172.16.10.2
+  ports:
+  - name: port-21027
+    port: 21027
+    protocol: UDP
+    targetPort: 21027
+  - name: port-137
+    port: 137
+    protocol: UDP
+    targetPort: 137
+  - name: port-138
+    port: 138
+    protocol: UDP
+    targetPort: 138
+  - name: port-1900
+    port: 1900
+    protocol: UDP
+    targetPort: 1900
+  - name: port-32410
+    port: 32410
+    protocol: UDP
+    targetPort: 32410
+  - name: port-32412
+    port: 32412
+    protocol: UDP
+    targetPort: 32412
+  - name: port-32413
+    port: 32413
+    protocol: UDP
+    targetPort: 32413
+  - name: port-32414
+    port: 32414
+    protocol: UDP
+    targetPort: 32414
+  selector:
+    app: smb-server
+  type: LoadBalancer
+---
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -3364,7 +3456,7 @@ spec:
     metadata:
       labels:
         app: smb-server
-        configmap-version: "15"
+        configmap-version: "16"
     spec:
       affinity:
         podAntiAffinity:
@@ -3385,20 +3477,19 @@ spec:
           value: Canada/Pacific
         - name: UMASK_SET
           value: "022"
+        - name: PLEX_CLAIM
+          value: "022"
+        - name: ADVERTISE_IP
+          value: http://172.16.10.2:32400/
         image: linuxserver/syncthing
         imagePullPolicy: Always
         name: syncthing
-        ports:
-        - containerPort: 8384
-        - containerPort: 22000
-        - containerPort: 21027
-          protocol: UDP
         resources:
           limits:
-            cpu: "2"
-            memory: 4000Mi
-          requests:
             cpu: "1"
+            memory: 2000Mi
+          requests:
+            cpu: ".5"
             memory: 500Mi
         volumeMounts:
         - mountPath: /config
@@ -3438,8 +3529,6 @@ spec:
           name: videos
         - mountPath: /etc/samba/
           name: samba-config
-      dnsPolicy: ClusterFirstWithHostNet
-      hostNetwork: true
       restartPolicy: Always
       volumes:
       - name: photos
@@ -3472,6 +3561,11 @@ spec:
       - name: syncthing-config
         persistentVolumeClaim:
           claimName: syncthing-config
+      - name: plex-config
+        persistentVolumeClaim:
+          claimName: plex-config
+      - emptyDir: {}
+        name: plex-transcode
 ---
 apiVersion: apps/v1
 kind: Deployment
@@ -4381,6 +4475,18 @@ spec:
   resources:
     requests:
       storage: 6000Gi
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: plex-config
+  namespace: media
+spec:
+  accessModes:
+  - ReadWriteOnce
+  resources:
+    requests:
+      storage: 1000Gi
 ---
 apiVersion: v1
 kind: PersistentVolumeClaim

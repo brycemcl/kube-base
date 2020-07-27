@@ -3010,6 +3010,22 @@ spec:
     port: 445
     protocol: TCP
     targetPort: 445
+  - name: port-32400
+    port: 32400
+    protocol: TCP
+    targetPort: 32400
+  - name: port-3005
+    port: 3005
+    protocol: TCP
+    targetPort: 3005
+  - name: port-8324
+    port: 8324
+    protocol: TCP
+    targetPort: 8324
+  - name: port-32469
+    port: 32469
+    protocol: TCP
+    targetPort: 32469
   selector:
     app: smb-server
   type: LoadBalancer
@@ -3036,6 +3052,26 @@ spec:
     port: 138
     protocol: UDP
     targetPort: 138
+  - name: port-1900
+    port: 1900
+    protocol: UDP
+    targetPort: 1900
+  - name: port-32410
+    port: 32410
+    protocol: UDP
+    targetPort: 32410
+  - name: port-32412
+    port: 32412
+    protocol: UDP
+    targetPort: 32412
+  - name: port-32413
+    port: 32413
+    protocol: UDP
+    targetPort: 32413
+  - name: port-32414
+    port: 32414
+    protocol: UDP
+    targetPort: 32414
   selector:
     app: smb-server
   type: LoadBalancer
@@ -3398,14 +3434,39 @@ spec:
             - jcr
             topologyKey: kubernetes.io/hostname
       containers:
+      - image: plexinc/pms-docker
+        name: plex
+        resources:
+          limits:
+            cpu: "2"
+            memory: 2000Mi
+          requests:
+            cpu: ".5"
+            memory: 500Mi
+        volumeMounts:
+        - mountPath: /srv/bryce
+          name: bryce
+        - mountPath: /srv/anacleto
+          name: anacleto
+        - mountPath: /srv/photos
+          name: photos
+        - mountPath: /srv/tv
+          name: tv
+        - mountPath: /srv/movies
+          name: movies
+        - mountPath: /srv/games
+          name: games
+        - mountPath: /srv/downloads
+          name: downloads
+        - mountPath: /srv/videos
+          name: videos
+        - mountPath: /transcode
+          name: plex-transcode
+        - mountPath: /config
+          name: plex-config
       - image: linuxserver/syncthing
         imagePullPolicy: Always
         name: syncthing
-        ports:
-        - containerPort: 8384
-        - containerPort: 22000
-        - containerPort: 21027
-          protocol: UDP
         resources:
           limits:
             cpu: "2"
@@ -3494,6 +3555,11 @@ spec:
       - name: syncthing-config
         persistentVolumeClaim:
           claimName: syncthing-config
+      - name: plex-config
+        persistentVolumeClaim:
+          claimName: plex-config
+      - emptyDir: {}
+        name: plex-transcode
 ---
 apiVersion: apps/v1
 kind: Deployment
@@ -4332,6 +4398,18 @@ spec:
   resources:
     requests:
       storage: 6000Gi
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: plex-config
+  namespace: media
+spec:
+  accessModes:
+  - ReadWriteOnce
+  resources:
+    requests:
+      storage: 1000Gi
 ---
 apiVersion: v1
 kind: PersistentVolumeClaim

@@ -3431,7 +3431,7 @@ spec:
           value: Canada/Pacific
         - name: UMASK_SET
           value: "022"
-      - image: brycemclachlan/smb-server:latest
+        image: brycemclachlan/smb-server:latest
         imagePullPolicy: Always
         name: smb-server
         resources:

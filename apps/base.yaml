@@ -3567,7 +3567,7 @@ spec:
         name: samba-config
       - name: syncthing-config
         persistentVolumeClaim:
-          claimName: plex-database
+          claimName: syncthing-config
       - name: plex-config
         persistentVolumeClaim:
           claimName: plex-config

@@ -360,7 +360,7 @@ spec:
     metadata:
       labels:
         app: smb-server
-        configmap-version: "2"
+        configmap-version: "3"
     spec:
       containers:
       - env:

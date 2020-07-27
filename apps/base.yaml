@@ -2689,7 +2689,6 @@ data:
             writable = yes
             create mode = 0777
             force directory mode = 0777
-            oplocks = False
 kind: ConfigMap
 metadata:
   name: samba-config
@@ -3169,14 +3168,14 @@ spec:
     metadata:
       labels:
         app: smb-server
-        configmap-version: "10"
+        configmap-version: "11"
     spec:
       containers:
       - env:
         - name: PGID
-          value: "1000"
+          value: "0"
         - name: PUID
-          value: "1000"
+          value: "0"
         - name: TZ
           value: Canada/Pacific
         - name: UMASK_SET

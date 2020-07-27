@@ -4415,7 +4415,7 @@ spec:
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
-  name: plex-database
+  name: plex-config
   namespace: media
 spec:
   accessModes:

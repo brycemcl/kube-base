@@ -3514,6 +3514,8 @@ spec:
           name: videos
         - mountPath: /transcode
           name: plex-transcode
+        - mountPath: /config
+          name: plex-config
       - image: linuxserver/syncthing
         imagePullPolicy: Always
         name: syncthing

@@ -3434,7 +3434,20 @@ spec:
             - jcr
             topologyKey: kubernetes.io/hostname
       containers:
-      - image: plexinc/pms-docker
+      - env:
+        - name: PLEX_PGID
+          value: "1000"
+        - name: PLEX_PUID
+          value: "1000"
+        - name: TZ
+          value: Canada/Pacific
+        - name: UMASK_SET
+          value: "022"
+        - name: PLEX_CLAIM
+          value: "022"
+        - name: ADVERTISE_IP
+          value: http://172.16.10.2:32400/
+        image: plexinc/pms-docker
         name: plex
         resources:
           limits:
@@ -3469,10 +3482,10 @@ spec:
         name: syncthing
         resources:
           limits:
-            cpu: "2"
-            memory: 4000Mi
-          requests:
             cpu: "1"
+            memory: 2000Mi
+          requests:
+            cpu: ".5"
             memory: 500Mi
         volumeMounts:
         - mountPath: /config
@@ -3497,7 +3510,7 @@ spec:
         name: smb-server
         resources:
           limits:
-            cpu: "2"
+            cpu: "1"
             memory: 1000Mi
           requests:
             cpu: ".1"

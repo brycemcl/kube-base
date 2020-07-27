@@ -3422,15 +3422,15 @@ spec:
           name: anacleto
         - mountPath: /data/bryce
           name: bryce
-        - env:
-          - name: PGID
-            value: "1000"
-          - name: PUID
-            value: "1000"
-          - name: TZ
-            value: Canada/Pacific
-          - name: UMASK_SET
-            value: "022"
+      - env:
+        - name: PGID
+          value: "1000"
+        - name: PUID
+          value: "1000"
+        - name: TZ
+          value: Canada/Pacific
+        - name: UMASK_SET
+          value: "022"
       - image: brycemclachlan/smb-server:latest
         imagePullPolicy: Always
         name: smb-server

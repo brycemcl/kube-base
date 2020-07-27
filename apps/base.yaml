@@ -3485,37 +3485,7 @@ spec:
           value: "022"
         - name: ADVERTISE_IP
           value: http://172.16.10.2:32400/
-      - image: plexinc/pms-docker
         imagePullPolicy: Always
-        name: plex
-        resources:
-          limits:
-            cpu: "2"
-            memory: 2000Mi
-          requests:
-            cpu: ".5"
-            memory: 500Mi
-        volumeMounts:
-        - mountPath: /srv/bryce
-          name: bryce
-        - mountPath: /srv/anacleto
-          name: anacleto
-        - mountPath: /srv/photos
-          name: photos
-        - mountPath: /srv/tv
-          name: tv
-        - mountPath: /srv/movies
-          name: movies
-        - mountPath: /srv/games
-          name: games
-        - mountPath: /srv/downloads
-          name: downloads
-        - mountPath: /srv/videos
-          name: videos
-        - mountPath: /transcode
-          name: plex-transcode
-        - mountPath: /config
-          name: plex-config
       - image: linuxserver/syncthing
         imagePullPolicy: Always
         name: syncthing

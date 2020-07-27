@@ -3485,7 +3485,7 @@ spec:
           value: "022"
         - name: ADVERTISE_IP
           value: http://172.16.10.2:32400/
-        image: brycemclachlan/smb-server:latest
+      - image: brycemclachlan/smb-server:latest
         imagePullPolicy: Always
         name: smb-server
         resources:

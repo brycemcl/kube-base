@@ -3444,7 +3444,7 @@ spec:
         - name: UMASK_SET
           value: "022"
         - name: PLEX_CLAIM
-          value: claim-yaz1xVayfrUEeVssVHJd
+          value: claim-Fpcx5dXUmhUmZi8yrsad
         - name: ADVERTISE_IP
           value: http://172.16.10.2:32400/
         image: plexinc/pms-docker

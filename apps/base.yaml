@@ -3206,7 +3206,7 @@ spec:
         resources:
           limits:
             cpu: ".5"
-            memory: 500Mi
+            memory: 1000Mi
           requests:
             cpu: ".1"
             memory: 100Mi

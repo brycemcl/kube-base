@@ -3410,11 +3410,6 @@ spec:
         image: linuxserver/syncthing
         imagePullPolicy: Always
         name: syncthing
-        ports:
-        - containerPort: 8384
-        - containerPort: 22000
-        - containerPort: 21027
-          protocol: UDP
         resources:
           limits:
             cpu: "2"
@@ -3460,8 +3455,6 @@ spec:
           name: videos
         - mountPath: /etc/samba/
           name: samba-config
-      dnsPolicy: ClusterFirstWithHostNet
-      hostNetwork: true
       restartPolicy: Always
       volumes:
       - name: photos

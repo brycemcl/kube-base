@@ -3981,6 +3981,7 @@ spec:
             - ./private/downloaded/tv/
             - /srv/downloads/tv
             image: brycemclachlan/lftp:latest
+            imagePullPolicy: Always
             name: lftp
             resources:
               limits:
@@ -4008,7 +4009,6 @@ spec:
               name: videos
             - mountPath: /root/
               name: lftp-netrc
-          imagePullPolicy: Always
           restartPolicy: OnFailure
       volumes:
       - name: photos

@@ -2746,6 +2746,7 @@ data:
             name resolve order = bcast host
             netbios name = media
             security = USER
+            browseable = yes
             server string = Server
             idmap config * : backend = tdb
 
@@ -3386,7 +3387,7 @@ spec:
     metadata:
       labels:
         app: smb-server
-        configmap-version: "14"
+        configmap-version: "15"
     spec:
       affinity:
         podAntiAffinity:

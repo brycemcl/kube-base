@@ -28,25 +28,6 @@ kind: Namespace
 metadata:
   name: rook-ceph
 ---
-apiVersion: storage.k8s.io/v1
-kind: StorageClass
-metadata:
-  name: smb-tv
-  namespace: kube-system
-mountOptions:
-- dir_mode=0777
-- file_mode=0777
-- uid=1000
-- gid=1000
-parameters:
-  createSubDir: "false"
-  csi.storage.k8s.io/node-stage-secret-name: smbcreds
-  csi.storage.k8s.io/node-stage-secret-namespace: kube-system
-  source: //smb-server.media.svc.cluster.local/tv
-provisioner: smb.csi.k8s.io
-reclaimPolicy: Retain
-volumeBindingMode: Immediate
----
 allowVolumeExpansion: true
 apiVersion: storage.k8s.io/v1
 kind: StorageClass
@@ -3615,7 +3596,7 @@ spec:
       volumes:
       - name: tv
         persistentVolumeClaim:
-          claimName: tv
+          claimName: smb-tv
 ---
 apiVersion: apps/v1
 kind: Deployment
@@ -4669,20 +4650,6 @@ spec:
   resources:
     requests:
       storage: 100Gi
----
-apiVersion: v1
-kind: PersistentVolumeClaim
-metadata:
-  name: tv
-  namespace: kube-system
-spec:
-  accessModes:
-  - ReadWriteMany
-  resources:
-    requests:
-      storage: 6000Gi
-  storageClassName: smb-tv
-  volumeName: tv
 ---
 apiVersion: v1
 kind: PersistentVolumeClaim

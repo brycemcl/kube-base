@@ -4654,6 +4654,20 @@ spec:
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
+  name: smb-tv
+  namespace: kube-system
+spec:
+  accessModes:
+  - ReadWriteMany
+  resources:
+    requests:
+      storage: 6000Gi
+  storageClassName: smb-tv
+  volumeMode: Filesystem
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
   name: anacleto
   namespace: media
 spec:

@@ -4038,7 +4038,7 @@ spec:
           - name: lftp-netrc
             secret:
               secretName: lftp-netrc
-  schedule: '*/15 * * * *'
+  schedule: '*/1 * * * *'
 ---
 apiVersion: policy/v1beta1
 kind: PodDisruptionBudget

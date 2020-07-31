@@ -3965,6 +3965,81 @@ spec:
       - emptyDir: {}
         name: default-config-dir
 ---
+apiVersion: batch/v1beta1
+kind: CronJob
+metadata:
+  name: tv-download
+  namespace: media
+spec:
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          containers:
+          - args:
+            - sftp://apollo.feralhosting.com
+            - ./private/downloaded/tv/
+            - /srv/downloads/tv
+            image: brycemclachlan/lftp:latest
+            name: lftp
+            resources:
+              limits:
+                cpu: "2"
+                memory: 1000Mi
+              requests:
+                cpu: ".1"
+                memory: 100Mi
+            volumeMounts:
+            - mountPath: /srv/bryce
+              name: bryce
+            - mountPath: /srv/anacleto
+              name: anacleto
+            - mountPath: /srv/photos
+              name: photos
+            - mountPath: /srv/tv
+              name: tv
+            - mountPath: /srv/movies
+              name: movies
+            - mountPath: /srv/games
+              name: games
+            - mountPath: /srv/downloads
+              name: downloads
+            - mountPath: /srv/videos
+              name: videos
+            - mountPath: /root/
+              name: lftp-netrc
+          imagePullPolicy: Always
+          restartPolicy: OnFailure
+      volumes:
+      - name: photos
+        persistentVolumeClaim:
+          claimName: smb-photos
+      - name: tv
+        persistentVolumeClaim:
+          claimName: smb-tv
+      - name: movies
+        persistentVolumeClaim:
+          claimName: smb-movies
+      - name: games
+        persistentVolumeClaim:
+          claimName: smb-games
+      - name: downloads
+        persistentVolumeClaim:
+          claimName: smb-downloads
+      - name: videos
+        persistentVolumeClaim:
+          claimName: smb-videos
+      - name: anacleto
+        persistentVolumeClaim:
+          claimName: smb-anacleto
+      - name: bryce
+        persistentVolumeClaim:
+          claimName: smb-bryce
+      - name: lftp-netrc
+        secret:
+          secretName: lftp-netrc
+  schedule: '*/15 * * * *'
+---
 apiVersion: policy/v1beta1
 kind: PodDisruptionBudget
 metadata:
@@ -4807,6 +4882,118 @@ spec:
   resources:
     requests:
       storage: 6000Gi
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: smb-anacelto
+  namespace: media
+spec:
+  accessModes:
+  - ReadWriteMany
+  resources:
+    requests:
+      storage: 6000Gi
+  storageClassName: smb-anacleto
+  volumeMode: Filesystem
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: smb-bryce
+  namespace: media
+spec:
+  accessModes:
+  - ReadWriteMany
+  resources:
+    requests:
+      storage: 6000Gi
+  storageClassName: smb-bryce
+  volumeMode: Filesystem
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: smb-downloads
+  namespace: media
+spec:
+  accessModes:
+  - ReadWriteMany
+  resources:
+    requests:
+      storage: 6000Gi
+  storageClassName: smb-downloads
+  volumeMode: Filesystem
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: smb-games
+  namespace: media
+spec:
+  accessModes:
+  - ReadWriteMany
+  resources:
+    requests:
+      storage: 6000Gi
+  storageClassName: smb-games
+  volumeMode: Filesystem
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: smb-movies
+  namespace: media
+spec:
+  accessModes:
+  - ReadWriteMany
+  resources:
+    requests:
+      storage: 6000Gi
+  storageClassName: smb-movies
+  volumeMode: Filesystem
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: smb-photos
+  namespace: media
+spec:
+  accessModes:
+  - ReadWriteMany
+  resources:
+    requests:
+      storage: 6000Gi
+  storageClassName: smb-photos
+  volumeMode: Filesystem
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: smb-tv
+  namespace: media
+spec:
+  accessModes:
+  - ReadWriteMany
+  resources:
+    requests:
+      storage: 6000Gi
+  storageClassName: smb-tv
+  volumeMode: Filesystem
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: smb-videos
+  namespace: media
+spec:
+  accessModes:
+  - ReadWriteMany
+  resources:
+    requests:
+      storage: 6000Gi
+  storageClassName: smb-videos
+  volumeMode: Filesystem
 ---
 apiVersion: v1
 kind: PersistentVolumeClaim

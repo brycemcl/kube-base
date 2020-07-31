@@ -3594,9 +3594,9 @@ spec:
           name: tv
       restartPolicy: Always
       volumes:
-      - PersistentVolume:
+      - name: tv
+        persistentVolumeClaim:
           claimName: smb-tv
-        name: tv
 ---
 apiVersion: apps/v1
 kind: Deployment

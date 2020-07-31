@@ -4010,35 +4010,35 @@ spec:
             - mountPath: /root/
               name: lftp-netrc
           restartPolicy: OnFailure
+          volumes:
+          - name: photos
+            persistentVolumeClaim:
+              claimName: smb-photos
+          - name: tv
+            persistentVolumeClaim:
+              claimName: smb-tv
+          - name: movies
+            persistentVolumeClaim:
+              claimName: smb-movies
+          - name: games
+            persistentVolumeClaim:
+              claimName: smb-games
+          - name: downloads
+            persistentVolumeClaim:
+              claimName: smb-downloads
+          - name: videos
+            persistentVolumeClaim:
+              claimName: smb-videos
+          - name: anacleto
+            persistentVolumeClaim:
+              claimName: smb-anacleto
+          - name: bryce
+            persistentVolumeClaim:
+              claimName: smb-bryce
+          - name: lftp-netrc
+            secret:
+              secretName: lftp-netrc
   schedule: '*/15 * * * *'
-  volumes:
-  - name: photos
-    persistentVolumeClaim:
-      claimName: smb-photos
-  - name: tv
-    persistentVolumeClaim:
-      claimName: smb-tv
-  - name: movies
-    persistentVolumeClaim:
-      claimName: smb-movies
-  - name: games
-    persistentVolumeClaim:
-      claimName: smb-games
-  - name: downloads
-    persistentVolumeClaim:
-      claimName: smb-downloads
-  - name: videos
-    persistentVolumeClaim:
-      claimName: smb-videos
-  - name: anacleto
-    persistentVolumeClaim:
-      claimName: smb-anacleto
-  - name: bryce
-    persistentVolumeClaim:
-      claimName: smb-bryce
-  - name: lftp-netrc
-    secret:
-      secretName: lftp-netrc
 ---
 apiVersion: policy/v1beta1
 kind: PodDisruptionBudget

@@ -3386,14 +3386,14 @@ spec:
     metadata:
       labels:
         app: media-smb-server
-        configmap-version: "14"
+        configmap-version: "15"
     spec:
       affinity:
         podAntiAffinity:
           requiredDuringSchedulingIgnoredDuringExecution:
           - labelSelector:
               matchLabels:
-                app: media-smb-server
+                app: smb-server
             namespaces:
             - jcr
             topologyKey: kubernetes.io/hostname

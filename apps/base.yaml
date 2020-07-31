@@ -28,6 +28,25 @@ kind: Namespace
 metadata:
   name: rook-ceph
 ---
+apiVersion: storage.k8s.io/v1
+kind: StorageClass
+metadata:
+  name: smb-tv
+  namespace: kube-system
+mountOptions:
+- dir_mode=0777
+- file_mode=0777
+- uid=1000
+- gid=1000
+parameters:
+  createSubDir: "false"
+  csi.storage.k8s.io/node-stage-secret-name: smbcreds
+  csi.storage.k8s.io/node-stage-secret-namespace: kube-system
+  source: //smb-server.media.svc.cluster.local/tv
+provisioner: smb.csi.k8s.io
+reclaimPolicy: Retain
+volumeBindingMode: Immediate
+---
 allowVolumeExpansion: true
 apiVersion: storage.k8s.io/v1
 kind: StorageClass
@@ -3325,6 +3344,106 @@ spec:
 apiVersion: apps/v1
 kind: Deployment
 metadata:
+  name: csi-smb-controller
+  namespace: kube-system
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: csi-smb-controller
+  template:
+    metadata:
+      labels:
+        app: csi-smb-controller
+    spec:
+      containers:
+      - args:
+        - -v=5
+        - --csi-address=$(ADDRESS)
+        - --enable-leader-election
+        - --leader-election-type=leases
+        env:
+        - name: ADDRESS
+          value: /csi/csi.sock
+        image: mcr.microsoft.com/oss/kubernetes-csi/csi-provisioner:v1.4.0
+        name: csi-provisioner
+        resources:
+          limits:
+            cpu: 1
+            memory: 1Gi
+          requests:
+            cpu: 10m
+            memory: 20Mi
+        volumeMounts:
+        - mountPath: /csi
+          name: socket-dir
+      - args:
+        - --csi-address=/csi/csi.sock
+        - --connection-timeout=3s
+        - --health-port=29632
+        - --v=5
+        image: mcr.microsoft.com/oss/kubernetes-csi/livenessprobe:v1.1.0
+        name: liveness-probe
+        resources:
+          limits:
+            cpu: 1
+            memory: 1Gi
+          requests:
+            cpu: 10m
+            memory: 20Mi
+        volumeMounts:
+        - mountPath: /csi
+          name: socket-dir
+      - args:
+        - --v=5
+        - --endpoint=$(CSI_ENDPOINT)
+        env:
+        - name: CSI_ENDPOINT
+          value: unix:///csi/csi.sock
+        image: mcr.microsoft.com/k8s/csi/smb-csi:v0.2.0
+        imagePullPolicy: IfNotPresent
+        livenessProbe:
+          failureThreshold: 5
+          httpGet:
+            path: /healthz
+            port: healthz
+          initialDelaySeconds: 30
+          periodSeconds: 30
+          timeoutSeconds: 10
+        name: smb
+        ports:
+        - containerPort: 29632
+          name: healthz
+          protocol: TCP
+        - containerPort: 29634
+          name: metrics
+          protocol: TCP
+        resources:
+          limits:
+            cpu: 1
+            memory: 1Gi
+          requests:
+            cpu: 10m
+            memory: 20Mi
+        volumeMounts:
+        - mountPath: /csi
+          name: socket-dir
+      nodeSelector:
+        kubernetes.io/os: linux
+      priorityClassName: system-cluster-critical
+      serviceAccountName: csi-smb-controller-sa
+      tolerations:
+      - effect: NoSchedule
+        key: node-role.kubernetes.io/master
+        operator: Equal
+        value: "true"
+      volumes:
+      - emptyDir: {}
+        name: socket-dir
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
   labels:
     k8s-app: metrics-server
   name: metrics-server
@@ -3884,6 +4003,132 @@ spec:
 apiVersion: apps/v1
 kind: DaemonSet
 metadata:
+  name: csi-smb-node
+  namespace: kube-system
+spec:
+  selector:
+    matchLabels:
+      app: csi-smb-node
+  template:
+    metadata:
+      labels:
+        app: csi-smb-node
+    spec:
+      containers:
+      - args:
+        - --csi-address=/csi/csi.sock
+        - --connection-timeout=3s
+        - --health-port=39613
+        - --v=5
+        image: mcr.microsoft.com/oss/kubernetes-csi/livenessprobe:v1.1.0
+        name: liveness-probe
+        resources:
+          limits:
+            cpu: 1
+            memory: 1Gi
+          requests:
+            cpu: 10m
+            memory: 20Mi
+        volumeMounts:
+        - mountPath: /csi
+          name: socket-dir
+      - args:
+        - --csi-address=$(ADDRESS)
+        - --kubelet-registration-path=$(DRIVER_REG_SOCK_PATH)
+        - --v=5
+        env:
+        - name: ADDRESS
+          value: /csi/csi.sock
+        - name: DRIVER_REG_SOCK_PATH
+          value: /var/lib/kubelet/plugins/smb.csi.k8s.io/csi.sock
+        image: mcr.microsoft.com/oss/kubernetes-csi/csi-node-driver-registrar:v1.2.0
+        lifecycle:
+          preStop:
+            exec:
+              command:
+              - /bin/sh
+              - -c
+              - rm -rf /registration/smb.csi.k8s.io-reg.sock /csi/csi.sock
+        name: node-driver-registrar
+        resources:
+          limits:
+            cpu: 1
+            memory: 1Gi
+          requests:
+            cpu: 10m
+            memory: 20Mi
+        volumeMounts:
+        - mountPath: /csi
+          name: socket-dir
+        - mountPath: /registration
+          name: registration-dir
+      - args:
+        - --v=5
+        - --endpoint=$(CSI_ENDPOINT)
+        - --nodeid=$(KUBE_NODE_NAME)
+        env:
+        - name: CSI_ENDPOINT
+          value: unix:///csi/csi.sock
+        - name: KUBE_NODE_NAME
+          valueFrom:
+            fieldRef:
+              apiVersion: v1
+              fieldPath: spec.nodeName
+        image: mcr.microsoft.com/k8s/csi/smb-csi:v0.2.0
+        imagePullPolicy: IfNotPresent
+        livenessProbe:
+          failureThreshold: 5
+          httpGet:
+            path: /healthz
+            port: healthz
+          initialDelaySeconds: 30
+          periodSeconds: 30
+          timeoutSeconds: 10
+        name: smb
+        ports:
+        - containerPort: 39613
+          name: healthz
+          protocol: TCP
+        - containerPort: 39615
+          name: metrics
+          protocol: TCP
+        resources:
+          limits:
+            cpu: 1
+            memory: 1Gi
+          requests:
+            cpu: 10m
+            memory: 20Mi
+        securityContext:
+          privileged: true
+        volumeMounts:
+        - mountPath: /csi
+          name: socket-dir
+        - mountPath: /var/lib/kubelet/
+          mountPropagation: Bidirectional
+          name: mountpoint-dir
+      nodeSelector:
+        kubernetes.io/os: linux
+      priorityClassName: system-node-critical
+      tolerations:
+      - operator: Exists
+      volumes:
+      - hostPath:
+          path: /var/lib/kubelet/plugins/smb.csi.k8s.io
+          type: DirectoryOrCreate
+        name: socket-dir
+      - hostPath:
+          path: /var/lib/kubelet/
+          type: DirectoryOrCreate
+        name: mountpoint-dir
+      - hostPath:
+          path: /var/lib/kubelet/plugins_registry/
+          type: DirectoryOrCreate
+        name: registration-dir
+---
+apiVersion: apps/v1
+kind: DaemonSet
+metadata:
   labels:
     app: metallb
     component: speaker
@@ -4234,6 +4479,15 @@ spec:
   - projected
   - hostPath
   - flexVolume
+---
+apiVersion: storage.k8s.io/v1beta1
+kind: CSIDriver
+metadata:
+  name: smb.csi.k8s.io
+  namespace: kube-system
+spec:
+  attachRequired: false
+  podInfoOnMount: true
 ---
 apiVersion: v1
 kind: PersistentVolumeClaim

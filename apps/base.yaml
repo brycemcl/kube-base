@@ -42,7 +42,7 @@ parameters:
   createSubDir: "false"
   csi.storage.k8s.io/node-stage-secret-name: smbcreds
   csi.storage.k8s.io/node-stage-secret-namespace: kube-system
-  source: //smb-server-tcp.media.svc.cluster.local/tv
+  source: //smb-server-tcp.media.svc.home.bmclachlan.xyz/tv
 provisioner: smb.csi.k8s.io
 reclaimPolicy: Retain
 volumeBindingMode: Immediate
@@ -4621,30 +4621,6 @@ metadata:
 spec:
   attachRequired: false
   podInfoOnMount: true
----
-apiVersion: v1
-kind: PersistentVolume
-metadata:
-  name: smb-tv
-spec:
-  accessModes:
-  - ReadWriteMany
-  capacity:
-    storage: 6000Gi
-  csi:
-    driver: smb.csi.k8s.io
-    nodeStageSecretRef:
-      name: smbcreds
-      namespace: kube-system
-    readOnly: false
-    volumeAttributes:
-      source: //smb-server-tcp.media.svc.cluster.local/tv
-    volumeHandle: jksdlfkjhsdljhf
-  mountOptions:
-  - dir_mode=0777
-  - file_mode=0777
-  - vers=3.0
-  persistentVolumeReclaimPolicy: Retain
 ---
 apiVersion: v1
 kind: PersistentVolumeClaim

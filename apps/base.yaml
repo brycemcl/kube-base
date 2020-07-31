@@ -31,6 +31,120 @@ metadata:
 apiVersion: storage.k8s.io/v1
 kind: StorageClass
 metadata:
+  name: smb-anacleto
+  namespace: kube-system
+mountOptions:
+- dir_mode=0777
+- file_mode=0777
+- uid=1000
+- gid=1000
+parameters:
+  createSubDir: "false"
+  csi.storage.k8s.io/node-stage-secret-name: smbcreds
+  csi.storage.k8s.io/node-stage-secret-namespace: kube-system
+  source: //smb-server-tcp.media.svc.home.bmclachlan.xyz/anacleto
+provisioner: smb.csi.k8s.io
+reclaimPolicy: Retain
+volumeBindingMode: Immediate
+---
+apiVersion: storage.k8s.io/v1
+kind: StorageClass
+metadata:
+  name: smb-bryce
+  namespace: kube-system
+mountOptions:
+- dir_mode=0777
+- file_mode=0777
+- uid=1000
+- gid=1000
+parameters:
+  createSubDir: "false"
+  csi.storage.k8s.io/node-stage-secret-name: smbcreds
+  csi.storage.k8s.io/node-stage-secret-namespace: kube-system
+  source: //smb-server-tcp.media.svc.home.bmclachlan.xyz/bryce
+provisioner: smb.csi.k8s.io
+reclaimPolicy: Retain
+volumeBindingMode: Immediate
+---
+apiVersion: storage.k8s.io/v1
+kind: StorageClass
+metadata:
+  name: smb-downloads
+  namespace: kube-system
+mountOptions:
+- dir_mode=0777
+- file_mode=0777
+- uid=1000
+- gid=1000
+parameters:
+  createSubDir: "false"
+  csi.storage.k8s.io/node-stage-secret-name: smbcreds
+  csi.storage.k8s.io/node-stage-secret-namespace: kube-system
+  source: //smb-server-tcp.media.svc.home.bmclachlan.xyz/downloads
+provisioner: smb.csi.k8s.io
+reclaimPolicy: Retain
+volumeBindingMode: Immediate
+---
+apiVersion: storage.k8s.io/v1
+kind: StorageClass
+metadata:
+  name: smb-games
+  namespace: kube-system
+mountOptions:
+- dir_mode=0777
+- file_mode=0777
+- uid=1000
+- gid=1000
+parameters:
+  createSubDir: "false"
+  csi.storage.k8s.io/node-stage-secret-name: smbcreds
+  csi.storage.k8s.io/node-stage-secret-namespace: kube-system
+  source: //smb-server-tcp.media.svc.home.bmclachlan.xyz/games
+provisioner: smb.csi.k8s.io
+reclaimPolicy: Retain
+volumeBindingMode: Immediate
+---
+apiVersion: storage.k8s.io/v1
+kind: StorageClass
+metadata:
+  name: smb-movies
+  namespace: kube-system
+mountOptions:
+- dir_mode=0777
+- file_mode=0777
+- uid=1000
+- gid=1000
+parameters:
+  createSubDir: "false"
+  csi.storage.k8s.io/node-stage-secret-name: smbcreds
+  csi.storage.k8s.io/node-stage-secret-namespace: kube-system
+  source: //smb-server-tcp.media.svc.home.bmclachlan.xyz/movies
+provisioner: smb.csi.k8s.io
+reclaimPolicy: Retain
+volumeBindingMode: Immediate
+---
+apiVersion: storage.k8s.io/v1
+kind: StorageClass
+metadata:
+  name: smb-photos
+  namespace: kube-system
+mountOptions:
+- dir_mode=0777
+- file_mode=0777
+- uid=1000
+- gid=1000
+parameters:
+  createSubDir: "false"
+  csi.storage.k8s.io/node-stage-secret-name: smbcreds
+  csi.storage.k8s.io/node-stage-secret-namespace: kube-system
+  source: //smb-server-tcp.media.svc.home.bmclachlan.xyz/photos
+provisioner: smb.csi.k8s.io
+reclaimPolicy: Retain
+volumeBindingMode: Immediate
+---
+apiVersion: storage.k8s.io/v1
+kind: StorageClass
+metadata:
   name: smb-tv
   namespace: kube-system
 mountOptions:
@@ -43,6 +157,25 @@ parameters:
   csi.storage.k8s.io/node-stage-secret-name: smbcreds
   csi.storage.k8s.io/node-stage-secret-namespace: kube-system
   source: //smb-server-tcp.media.svc.home.bmclachlan.xyz/tv
+provisioner: smb.csi.k8s.io
+reclaimPolicy: Retain
+volumeBindingMode: Immediate
+---
+apiVersion: storage.k8s.io/v1
+kind: StorageClass
+metadata:
+  name: smb-videos
+  namespace: kube-system
+mountOptions:
+- dir_mode=0777
+- file_mode=0777
+- uid=1000
+- gid=1000
+parameters:
+  createSubDir: "false"
+  csi.storage.k8s.io/node-stage-secret-name: smbcreds
+  csi.storage.k8s.io/node-stage-secret-namespace: kube-system
+  source: //smb-server-tcp.media.svc.home.bmclachlan.xyz/videos
 provisioner: smb.csi.k8s.io
 reclaimPolicy: Retain
 volumeBindingMode: Immediate
@@ -3580,49 +3713,6 @@ metadata:
   labels:
     app: smb-server
   name: smb-server
-  namespace: kube-system
-spec:
-  replicas: 1
-  selector:
-    matchLabels:
-      app: smb-server
-  strategy:
-    rollingUpdate:
-      maxSurge: 1
-      maxUnavailable: 1
-    type: RollingUpdate
-  template:
-    metadata:
-      labels:
-        app: smb-server
-        configmap-version: "15"
-    spec:
-      containers:
-      - image: brycemclachlan/smb-server:latest
-        imagePullPolicy: Always
-        name: smb-server
-        resources:
-          limits:
-            cpu: "2"
-            memory: 1000Mi
-          requests:
-            cpu: ".1"
-            memory: 100Mi
-        volumeMounts:
-        - mountPath: /srv/tv
-          name: tv
-      restartPolicy: Always
-      volumes:
-      - name: tv
-        persistentVolumeClaim:
-          claimName: smb-tv
----
-apiVersion: apps/v1
-kind: Deployment
-metadata:
-  labels:
-    app: smb-server
-  name: smb-server
   namespace: media
 spec:
   replicas: 1
@@ -4645,20 +4735,6 @@ spec:
   resources:
     requests:
       storage: 100Gi
----
-apiVersion: v1
-kind: PersistentVolumeClaim
-metadata:
-  name: smb-tv
-  namespace: kube-system
-spec:
-  accessModes:
-  - ReadWriteMany
-  resources:
-    requests:
-      storage: 6000Gi
-  storageClassName: smb-tv
-  volumeMode: Filesystem
 ---
 apiVersion: v1
 kind: PersistentVolumeClaim

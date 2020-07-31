@@ -4619,7 +4619,7 @@ spec:
       namespace: kube-system
     readOnly: false
     volumeAttributes:
-      source: //smb-server.media.svc.cluster.local/tv
+      source: //smb-server-tcp.media.svc.cluster.local/tv
     volumeHandle: jksdlfkjhsdljhf
   mountOptions:
   - dir_mode=0777

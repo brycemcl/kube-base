@@ -2992,6 +2992,8 @@ metadata:
   name: smb-server-tcp
   namespace: media
 spec:
+  field-selector:
+    metadata.namespace: media
   loadBalancerIP: 172.16.10.2
   ports:
   - name: port-8384
@@ -3022,6 +3024,8 @@ metadata:
   name: smb-server-udp
   namespace: media
 spec:
+  field-selector:
+    metadata.namespace: media
   loadBalancerIP: 172.16.10.2
   ports:
   - name: port-21027

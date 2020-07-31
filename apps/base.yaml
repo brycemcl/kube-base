@@ -2758,7 +2758,6 @@ data:
             writable = yes
             create mode = 0777
             force directory mode = 0777
-            browseable = yes
 
     [TV]
             create mask = 0777
@@ -3169,7 +3168,7 @@ spec:
     metadata:
       labels:
         app: smb-server
-        configmap-version: "5"
+        configmap-version: "11"
     spec:
       containers:
       - env:
@@ -3191,11 +3190,11 @@ spec:
           protocol: UDP
         resources:
           limits:
-            cpu: ".5"
-            memory: 1000Mi
+            cpu: "2"
+            memory: 4000Mi
           requests:
-            cpu: ".10"
-            memory: 100Mi
+            cpu: "1"
+            memory: 500Mi
         volumeMounts:
         - mountPath: /config
           name: syncthing-config
@@ -3206,7 +3205,7 @@ spec:
         name: smb-server
         resources:
           limits:
-            cpu: ".5"
+            cpu: "2"
             memory: 1000Mi
           requests:
             cpu: ".1"
@@ -3387,7 +3386,7 @@ spec:
     metadata:
       labels:
         app: smb-server
-        configmap-version: "16"
+        configmap-version: "14"
     spec:
       affinity:
         podAntiAffinity:

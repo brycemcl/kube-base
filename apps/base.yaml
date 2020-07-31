@@ -3011,7 +3011,7 @@ spec:
     protocol: TCP
     targetPort: 445
   selector:
-    app: smb-server
+    app: media-smb-server
   type: LoadBalancer
 ---
 apiVersion: v1
@@ -3037,7 +3037,7 @@ spec:
     protocol: UDP
     targetPort: 138
   selector:
-    app: smb-server
+    app: media-smb-server
   type: LoadBalancer
 ---
 apiVersion: apps/v1
@@ -3369,14 +3369,14 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   labels:
-    app: smb-server
+    app: media-smb-server
   name: smb-server
   namespace: media
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: smb-server
+      app: media-smb-server
   strategy:
     rollingUpdate:
       maxSurge: 1
@@ -3385,15 +3385,15 @@ spec:
   template:
     metadata:
       labels:
-        app: smb-server
-        configmap-version: "14"
+        app: media-smb-server
+        configmap-version: "15"
     spec:
       affinity:
         podAntiAffinity:
           requiredDuringSchedulingIgnoredDuringExecution:
           - labelSelector:
               matchLabels:
-                app: smb-server
+                app: media-smb-server
             namespaces:
             - jcr
             topologyKey: kubernetes.io/hostname

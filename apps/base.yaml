@@ -3393,7 +3393,7 @@ spec:
           requiredDuringSchedulingIgnoredDuringExecution:
           - labelSelector:
               matchLabels:
-                app: media-smb-server
+                app: smb-server
             namespaces:
             - jcr
             topologyKey: kubernetes.io/hostname
@@ -3410,11 +3410,6 @@ spec:
         image: linuxserver/syncthing
         imagePullPolicy: Always
         name: syncthing
-        ports:
-        - containerPort: 8384
-        - containerPort: 22000
-        - containerPort: 21027
-          protocol: UDP
         resources:
           limits:
             cpu: "2"
@@ -3434,13 +3429,6 @@ spec:
       - image: brycemclachlan/smb-server:latest
         imagePullPolicy: Always
         name: smb-server
-        ports:
-        - containerPort: 139
-        - containerPort: 445
-        - containerPort: 137
-          protocol: UDP
-        - containerPort: 138
-          protocol: UDP
         resources:
           limits:
             cpu: "2"

@@ -2746,7 +2746,6 @@ data:
             name resolve order = bcast host
             netbios name = media
             security = USER
-            browseable = yes
             server string = Server
             idmap config * : backend = tdb
 
@@ -2759,6 +2758,7 @@ data:
             writable = yes
             create mode = 0777
             force directory mode = 0777
+            browseable = yes
 
     [TV]
             create mask = 0777
@@ -3387,7 +3387,7 @@ spec:
     metadata:
       labels:
         app: smb-server
-        configmap-version: "15"
+        configmap-version: "16"
     spec:
       affinity:
         podAntiAffinity:

@@ -4623,6 +4623,30 @@ spec:
   podInfoOnMount: true
 ---
 apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: smb-tv
+spec:
+  accessModes:
+  - ReadWriteMany
+  capacity:
+    storage: 6000Gi
+  csi:
+    driver: smb.csi.k8s.io
+    nodeStageSecretRef:
+      name: smbcreds
+      namespace: kube-system
+    readOnly: false
+    volumeAttributes:
+      source: //smb-server-tcp.media.svc.cluster.local/tv
+    volumeHandle: jksdlfkjhsdljhf
+  mountOptions:
+  - dir_mode=0777
+  - file_mode=0777
+  - vers=3.0
+  persistentVolumeReclaimPolicy: Retain
+---
+apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
   name: jcr-data

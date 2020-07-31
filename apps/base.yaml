@@ -3490,6 +3490,49 @@ metadata:
   labels:
     app: smb-server
   name: smb-server
+  namespace: kube-system
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: smb-server
+  strategy:
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 1
+    type: RollingUpdate
+  template:
+    metadata:
+      labels:
+        app: smb-server
+        configmap-version: "14"
+    spec:
+      containers:
+      - image: brycemclachlan/smb-server:latest
+        imagePullPolicy: Always
+        name: smb-server
+        resources:
+          limits:
+            cpu: "2"
+            memory: 1000Mi
+          requests:
+            cpu: ".1"
+            memory: 100Mi
+        volumeMounts:
+        - mountPath: /srv/tv
+          name: tv
+      restartPolicy: Always
+      volumes:
+      - name: tv
+        persistentVolumeClaim:
+          claimName: tv
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: smb-server
+  name: smb-server
   namespace: media
 spec:
   replicas: 1
@@ -4512,6 +4555,20 @@ spec:
   resources:
     requests:
       storage: 100Gi
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: tv
+  namespace: kube-system
+spec:
+  accessModes:
+  - ReadWriteMany
+  resources:
+    requests:
+      storage: 6000Gi
+  storageClassName: smb-tv
+  volumeName: tv
 ---
 apiVersion: v1
 kind: PersistentVolumeClaim

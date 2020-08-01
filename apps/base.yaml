@@ -3968,7 +3968,7 @@ spec:
 apiVersion: batch/v1beta1
 kind: CronJob
 metadata:
-  name: tv-download
+  name: downloads
   namespace: media
 spec:
   concurrencyPolicy: Forbid

@@ -3981,7 +3981,7 @@ spec:
             - sftp://apollo.feralhosting.com
             - ./private/downloaded/
             - /srv/downloads/
-            image: brycemclachlan/lftp:test
+            image: brycemclachlan/lftp
             imagePullPolicy: Always
             name: lftp
             resources:
@@ -4008,8 +4008,6 @@ spec:
               name: downloads
             - mountPath: /srv/videos
               name: videos
-            - mountPath: /root/
-              name: lftp-netrc
           restartPolicy: OnFailure
           volumes:
           - name: photos

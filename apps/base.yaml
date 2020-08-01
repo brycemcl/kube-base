@@ -3979,8 +3979,8 @@ spec:
           containers:
           - args:
             - apollo.feralhosting.com
-            - ./private/downloaded/
-            - /srv/downloads/
+            - ./private/downloaded/tv/The.Umbrella.Academy.S02.1080p.NF.WEBRip.DDP5.1.x264-MIXED[rartv]
+            - /srv/downloads/tv/The.Umbrella.Academy.S02.1080p.NF.WEBRip.DDP5.1.x264-MIXED[rartv]
             image: brycemclachlan/lftp
             imagePullPolicy: Always
             name: lftp

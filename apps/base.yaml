@@ -4012,6 +4012,8 @@ spec:
               name: lftp-netrc-init
           initContainers:
           - command:
+            - sh
+            - -c
             - cp /netrc/.netrc /root/.netrc
             image: alpine:latest
             name: init-netrc

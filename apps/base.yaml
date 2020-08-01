@@ -3978,7 +3978,7 @@ spec:
         spec:
           containers:
           - args:
-            - sftp://apollo.feralhosting.com
+            - apollo.feralhosting.com
             - ./private/downloaded/
             - /srv/downloads/
             image: brycemclachlan/lftp

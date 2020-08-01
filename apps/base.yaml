@@ -4015,7 +4015,7 @@ spec:
             - sh
             - -c
             - cp /netrc/ /root/
-            image: busybox:latest
+            image: alpine:latest
             name: init-netrc
             volumeMounts:
             - mountPath: /root/

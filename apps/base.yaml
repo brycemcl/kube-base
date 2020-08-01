@@ -3968,7 +3968,7 @@ spec:
 apiVersion: batch/v1beta1
 kind: CronJob
 metadata:
-  name: downloads
+  name: downloads-ua
   namespace: media
 spec:
   concurrencyPolicy: Forbid

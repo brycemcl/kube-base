@@ -3981,7 +3981,7 @@ spec:
             - sftp://apollo.feralhosting.com
             - ./private/downloaded/
             - /srv/downloads/
-            image: brycemclachlan/lftp:latest
+            image: brycemclachlan/lftp:4b4cfa7b
             imagePullPolicy: Always
             name: lftp
             resources:

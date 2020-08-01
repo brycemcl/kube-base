@@ -3968,7 +3968,7 @@ spec:
 apiVersion: batch/v1beta1
 kind: CronJob
 metadata:
-  name: downloads-ua
+  name: downloads
   namespace: media
 spec:
   concurrencyPolicy: Forbid
@@ -3979,8 +3979,8 @@ spec:
           containers:
           - args:
             - apollo.feralhosting.com
-            - ./private/downloaded/tv/The.Umbrella.Academy.S02.1080p.NF.WEBRip.DDP5.1.x264-MIXED[rartv]
-            - /srv/downloads/tv/The.Umbrella.Academy.S02.1080p.NF.WEBRip.DDP5.1.x264-MIXED[rartv]
+            - ./private/downloaded/
+            - /srv/downloads/
             image: brycemclachlan/lftp
             imagePullPolicy: Always
             name: lftp

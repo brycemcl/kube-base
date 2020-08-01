@@ -4052,7 +4052,7 @@ spec:
             secret:
               secretName: lftp-netrc
           - emptyDir:
-              emptyDir.medium: Memory
+              medium: Memory
             name: lftp-netrc-init
   schedule: '*/1 * * * *'
 ---

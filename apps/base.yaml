@@ -4886,7 +4886,7 @@ spec:
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
-  name: smb-anacelto
+  name: smb-anacleto
   namespace: media
 spec:
   accessModes:

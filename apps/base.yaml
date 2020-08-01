@@ -3983,13 +3983,6 @@ spec:
             - /srv/downloads/
             image: brycemclachlan/lftp
             imagePullPolicy: Always
-            lifecycle:
-              postStart:
-                exec:
-                  command:
-                  - /bin/sh
-                  - -c
-                  - cp /netrc/.netrc /root/.netrc
             name: lftp
             resources:
               limits:

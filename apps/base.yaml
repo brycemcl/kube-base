@@ -4014,7 +4014,7 @@ spec:
           - command:
             - sh
             - -c
-            - cp /netrc/.netrc /root/.netrc
+            - ls /netrc/ && ls /root/
             image: alpine:latest
             name: init-netrc
             volumeMounts:

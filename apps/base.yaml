@@ -3971,11 +3971,11 @@ metadata:
   name: tv-download
   namespace: media
 spec:
+  concurrencyPolicy: Forbid
   jobTemplate:
     spec:
       template:
         spec:
-          concurrencyPolicy: Forbid
           containers:
           - args:
             - sftp://apollo.feralhosting.com

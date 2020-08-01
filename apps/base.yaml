@@ -3282,6 +3282,26 @@ spec:
     app: smb-server
   type: LoadBalancer
 ---
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: rook-ceph-mgr
+    rook_cluster: rook-ceph
+  name: rook-ceph-mgr-dashboard-loadbalancer
+  namespace: rook-ceph
+spec:
+  ports:
+  - name: dashboard
+    port: 8443
+    protocol: TCP
+    targetPort: 8443
+  selector:
+    app: rook-ceph-mgr
+    rook_cluster: rook-ceph
+  sessionAffinity: None
+  type: LoadBalancer
+---
 apiVersion: apps/v1
 kind: Deployment
 metadata:

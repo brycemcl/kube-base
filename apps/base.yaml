@@ -4051,7 +4051,7 @@ spec:
           - name: lftp-netrc
             secret:
               secretName: lftp-netrc
-          - EmptyDirs:
+          - emptyDir:
               emptyDir.medium: Memory
             name: lftp-netrc-init
   schedule: '*/1 * * * *'

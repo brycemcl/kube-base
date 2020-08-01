@@ -4008,6 +4008,20 @@ spec:
               name: downloads
             - mountPath: /srv/videos
               name: videos
+            - mountPath: /root/
+              name: lftp-netrc-init
+          initContainers:
+          - command:
+            - sh
+            - -c
+            - cp /netrc/ /root/
+            image: busybox:latest
+            name: init-netrc
+            volumeMounts:
+            - mountPath: /root/
+              name: lftp-netrc-init
+            - mountPath: /netrc/
+              name: lftp-netrc
           restartPolicy: OnFailure
           volumes:
           - name: photos
@@ -4037,6 +4051,9 @@ spec:
           - name: lftp-netrc
             secret:
               secretName: lftp-netrc
+          - EmptyDirs:
+              emptyDir.medium: Memory
+            name: lftp-netrc-init
   schedule: '*/1 * * * *'
 ---
 apiVersion: policy/v1beta1

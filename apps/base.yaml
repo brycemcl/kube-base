@@ -4272,6 +4272,7 @@ spec:
   concurrencyPolicy: Forbid
   jobTemplate:
     spec:
+      startingDeadlineSeconds: 60
       template:
         spec:
           containers:
@@ -4309,7 +4310,6 @@ spec:
             - mountPath: /netrc/
               name: lftp-netrc
           restartPolicy: OnFailure
-          startingDeadlineSeconds: 60
           volumes:
           - name: photos
             persistentVolumeClaim:

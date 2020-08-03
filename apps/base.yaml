@@ -3248,8 +3248,12 @@ metadata:
   namespace: media
 spec:
   ports:
-  - name: port-8989
+  - name: port-443
     port: 443
+    protocol: TCP
+    targetPort: 7878
+  - name: port-80
+    port: 80
     protocol: TCP
     targetPort: 7878
   selector:

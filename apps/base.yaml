@@ -3894,7 +3894,16 @@ spec:
         configmap-version: "14"
     spec:
       containers:
-      - image: linuxserver/sonarr
+      - env:
+        - name: PGID
+          value: "1000"
+        - name: PUID
+          value: "1000"
+        - name: TZ
+          value: Canada/Pacific
+        - name: UMASK_SET
+          value: "000"
+        image: linuxserver/sonarr
         imagePullPolicy: Always
         name: sonarr
         resources:
@@ -3923,15 +3932,6 @@ spec:
           name: videos
         - mountPath: /config
           name: sonarr-config
-      - env:
-        - name: PGID
-          value: "1000"
-        - name: PUID
-          value: "1000"
-        - name: TZ
-          value: Canada/Pacific
-        - name: UMASK_SET
-          value: "000"
       volumes:
       - name: photos
         persistentVolumeClaim:

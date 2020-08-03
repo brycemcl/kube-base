@@ -4272,7 +4272,6 @@ spec:
   concurrencyPolicy: Forbid
   jobTemplate:
     spec:
-      startingDeadlineSeconds: 60
       template:
         spec:
           containers:
@@ -4339,6 +4338,7 @@ spec:
             secret:
               secretName: lftp-netrc
   schedule: '*/1 * * * *'
+  startingDeadlineSeconds: 60
 ---
 apiVersion: policy/v1beta1
 kind: PodDisruptionBudget

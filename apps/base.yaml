@@ -4266,6 +4266,83 @@ spec:
 apiVersion: batch/v1beta1
 kind: CronJob
 metadata:
+  name: downloads-movies
+  namespace: media
+spec:
+  concurrencyPolicy: Forbid
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          containers:
+          - args:
+            - apollo.feralhosting.com
+            - ./private/downloaded/movies/
+            - /srv/downloads/movies/
+            image: brycemclachlan/lftp
+            imagePullPolicy: Always
+            name: lftp
+            resources:
+              limits:
+                cpu: "2"
+                memory: 1000Mi
+              requests:
+                cpu: ".1"
+                memory: 100Mi
+            volumeMounts:
+            - mountPath: /srv/bryce
+              name: bryce
+            - mountPath: /srv/anacleto
+              name: anacleto
+            - mountPath: /srv/photos
+              name: photos
+            - mountPath: /srv/tv
+              name: tv
+            - mountPath: /srv/movies
+              name: movies
+            - mountPath: /srv/games
+              name: games
+            - mountPath: /srv/downloads
+              name: downloads
+            - mountPath: /srv/videos
+              name: videos
+            - mountPath: /netrc/
+              name: lftp-netrc
+          restartPolicy: OnFailure
+          volumes:
+          - name: photos
+            persistentVolumeClaim:
+              claimName: smb-photos
+          - name: tv
+            persistentVolumeClaim:
+              claimName: smb-tv
+          - name: movies
+            persistentVolumeClaim:
+              claimName: smb-movies
+          - name: games
+            persistentVolumeClaim:
+              claimName: smb-games
+          - name: downloads
+            persistentVolumeClaim:
+              claimName: smb-downloads
+          - name: videos
+            persistentVolumeClaim:
+              claimName: smb-videos
+          - name: anacleto
+            persistentVolumeClaim:
+              claimName: smb-anacleto
+          - name: bryce
+            persistentVolumeClaim:
+              claimName: smb-bryce
+          - name: lftp-netrc
+            secret:
+              secretName: lftp-netrc
+  schedule: '*/5 * * * *'
+  startingDeadlineSeconds: 60
+---
+apiVersion: batch/v1beta1
+kind: CronJob
+metadata:
   name: downloads-tv
   namespace: media
 spec:

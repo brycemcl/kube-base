@@ -3229,6 +3229,21 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
+  name: radarr
+  namespace: media
+spec:
+  ports:
+  - name: port-8989
+    port: 80
+    protocol: TCP
+    targetPort: 7878
+  selector:
+    app: radarr
+  type: LoadBalancer
+---
+apiVersion: v1
+kind: Service
+metadata:
   annotations:
     metallb.universe.tf/allow-shared-ip: smb-server
   name: smb-server-tcp
@@ -3746,6 +3761,97 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   labels:
+    app: radarr
+  name: radarr
+  namespace: media
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: radarr
+  strategy:
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 1
+    type: RollingUpdate
+  template:
+    metadata:
+      labels:
+        app: radarr
+        configmap-version: "14"
+    spec:
+      containers:
+      - env:
+        - name: PGID
+          value: "1000"
+        - name: PUID
+          value: "1000"
+        - name: TZ
+          value: Canada/Pacific
+        - name: UMASK_SET
+          value: "000"
+        image: linuxserver/radarr
+        imagePullPolicy: Always
+        name: radarr
+        resources:
+          limits:
+            cpu: "2"
+            memory: 1000Mi
+          requests:
+            cpu: ".1"
+            memory: 100Mi
+        volumeMounts:
+        - mountPath: /srv/bryce
+          name: bryce
+        - mountPath: /srv/anacleto
+          name: anacleto
+        - mountPath: /srv/photos
+          name: photos
+        - mountPath: /srv/tv
+          name: tv
+        - mountPath: /srv/movies
+          name: movies
+        - mountPath: /srv/games
+          name: games
+        - mountPath: /srv/downloads
+          name: downloads
+        - mountPath: /srv/videos
+          name: videos
+        - mountPath: /config
+          name: radarr-config
+      volumes:
+      - name: photos
+        persistentVolumeClaim:
+          claimName: smb-photos
+      - name: tv
+        persistentVolumeClaim:
+          claimName: smb-tv
+      - name: movies
+        persistentVolumeClaim:
+          claimName: smb-movies
+      - name: games
+        persistentVolumeClaim:
+          claimName: smb-games
+      - name: downloads
+        persistentVolumeClaim:
+          claimName: smb-downloads
+      - name: videos
+        persistentVolumeClaim:
+          claimName: smb-videos
+      - name: anacleto
+        persistentVolumeClaim:
+          claimName: smb-anacleto
+      - name: bryce
+        persistentVolumeClaim:
+          claimName: smb-bryce
+      - name: radarr-config
+        persistentVolumeClaim:
+          claimName: radarr-config
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
     app: smb-server
   name: smb-server
   namespace: media
@@ -4177,6 +4283,17 @@ spec:
   selector:
     matchLabels:
       app: smb-server
+---
+apiVersion: policy/v1beta1
+kind: PodDisruptionBudget
+metadata:
+  name: radarr
+  namespace: media
+spec:
+  minAvailable: 0
+  selector:
+    matchLabels:
+      app: radarr
 ---
 apiVersion: policy/v1beta1
 kind: PodDisruptionBudget
@@ -5020,6 +5137,18 @@ spec:
   resources:
     requests:
       storage: 6000Gi
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: radarr-config
+  namespace: media
+spec:
+  accessModes:
+  - ReadWriteOnce
+  resources:
+    requests:
+      storage: 100Gi
 ---
 apiVersion: v1
 kind: PersistentVolumeClaim

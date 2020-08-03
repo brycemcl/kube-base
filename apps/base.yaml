@@ -4309,6 +4309,7 @@ spec:
             - mountPath: /netrc/
               name: lftp-netrc
           restartPolicy: OnFailure
+          startingDeadlineSeconds: 60
           volumes:
           - name: photos
             persistentVolumeClaim:

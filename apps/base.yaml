@@ -3229,6 +3229,21 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
+  name: jackett
+  namespace: media
+spec:
+  ports:
+  - name: port-8989
+    port: 80
+    protocol: TCP
+    targetPort: 9117
+  selector:
+    app: jackett
+  type: LoadBalancer
+---
+apiVersion: v1
+kind: Service
+metadata:
   name: radarr
   namespace: media
 spec:
@@ -3761,6 +3776,57 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   labels:
+    app: jackett
+  name: jackett
+  namespace: media
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: jackett
+  strategy:
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 1
+    type: RollingUpdate
+  template:
+    metadata:
+      labels:
+        app: jackett
+        configmap-version: "14"
+    spec:
+      containers:
+      - env:
+        - name: PGID
+          value: "1000"
+        - name: PUID
+          value: "1000"
+        - name: TZ
+          value: Canada/Pacific
+        - name: UMASK_SET
+          value: "000"
+        image: linuxserver/jackett
+        imagePullPolicy: Always
+        name: jackett
+        resources:
+          limits:
+            cpu: "2"
+            memory: 1000Mi
+          requests:
+            cpu: ".1"
+            memory: 100Mi
+        volumeMounts:
+        - mountPath: /config
+          name: jackett-config
+      volumes:
+      - name: jackett-config
+        persistentVolumeClaim:
+          claimName: jackett-config
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
     app: radarr
   name: radarr
   namespace: media
@@ -4283,6 +4349,17 @@ spec:
   selector:
     matchLabels:
       app: smb-server
+---
+apiVersion: policy/v1beta1
+kind: PodDisruptionBudget
+metadata:
+  name: jackett
+  namespace: media
+spec:
+  minAvailable: 0
+  selector:
+    matchLabels:
+      app: jackett
 ---
 apiVersion: policy/v1beta1
 kind: PodDisruptionBudget
@@ -5113,6 +5190,18 @@ spec:
   resources:
     requests:
       storage: 6000Gi
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: jackett-config
+  namespace: media
+spec:
+  accessModes:
+  - ReadWriteOnce
+  resources:
+    requests:
+      storage: 100Gi
 ---
 apiVersion: v1
 kind: PersistentVolumeClaim

@@ -3249,7 +3249,7 @@ metadata:
 spec:
   ports:
   - name: port-8989
-    port: 80
+    port: 443
     protocol: TCP
     targetPort: 7878
   selector:

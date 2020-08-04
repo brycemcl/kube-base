@@ -4788,7 +4788,7 @@ spec:
           - name: lftp-netrc
             secret:
               secretName: lftp-netrc
-  schedule: '*/5 * * * *'
+  schedule: '*/1 * * * *'
   startingDeadlineSeconds: 60
 ---
 apiVersion: policy/v1beta1

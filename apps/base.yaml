@@ -4204,15 +4204,13 @@ spec:
     spec:
       affinity:
         podAffinity:
-          preferredDuringSchedulingIgnoredDuringExecution:
-          - preference:
-            - labelSelector:
-                matchLabels:
-                  app: smb-server
-              namespaces:
-              - media
-              topologyKey: kubernetes.io/hostname
-            weight: 1
+          requiredDuringSchedulingIgnoredDuringExecution:
+          - labelSelector:
+              matchLabels:
+                app: smb-server
+            namespaces:
+            - media
+            topologyKey: kubernetes.io/hostname
       containers:
       - env:
         - name: PGID

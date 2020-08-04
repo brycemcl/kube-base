@@ -3922,6 +3922,8 @@ spec:
           name: videos
         - mountPath: /config
           name: plex-config
+        - mountPath: /transcode
+          name: plex-transcode
       volumes:
       - name: photos
         persistentVolumeClaim:
@@ -3950,6 +3952,8 @@ spec:
       - name: plex-config
         persistentVolumeClaim:
           claimName: plex-config
+      - emptyDir: {}
+        name: plex-transcode
 ---
 apiVersion: apps/v1
 kind: Deployment

@@ -3812,14 +3812,13 @@ spec:
     spec:
       affinity:
         podAffinity:
-          preferredDuringSchedulingIgnoredDuringExecution:
+          requiredDuringSchedulingIgnoredDuringExecution:
           - labelSelector:
               matchLabels:
                 app: smb-server
             namespaces:
             - media
             topologyKey: kubernetes.io/hostname
-            weight: 100
       containers:
       - env:
         - name: PGID
@@ -3873,14 +3872,13 @@ spec:
     spec:
       affinity:
         podAffinity:
-          preferredDuringSchedulingIgnoredDuringExecution:
+          requiredDuringSchedulingIgnoredDuringExecution:
           - labelSelector:
               matchLabels:
                 app: smb-server
             namespaces:
             - media
             topologyKey: kubernetes.io/hostname
-            weight: 100
       containers:
       - env:
         - name: PGID
@@ -3978,14 +3976,13 @@ spec:
     spec:
       affinity:
         podAffinity:
-          preferredDuringSchedulingIgnoredDuringExecution:
+          requiredDuringSchedulingIgnoredDuringExecution:
           - labelSelector:
               matchLabels:
                 app: smb-server
             namespaces:
             - media
             topologyKey: kubernetes.io/hostname
-            weight: 100
       containers:
       - env:
         - name: PGID
@@ -4207,14 +4204,13 @@ spec:
     spec:
       affinity:
         podAffinity:
-          preferredDuringSchedulingIgnoredDuringExecution:
+          requiredDuringSchedulingIgnoredDuringExecution:
           - labelSelector:
               matchLabels:
                 app: smb-server
             namespaces:
             - media
             topologyKey: kubernetes.io/hostname
-            weight: 100
       containers:
       - env:
         - name: PGID
@@ -4426,14 +4422,13 @@ spec:
         spec:
           affinity:
             podAffinity:
-              preferredDuringSchedulingIgnoredDuringExecution:
+              requiredDuringSchedulingIgnoredDuringExecution:
               - labelSelector:
                   matchLabels:
                     app: smb-server
                 namespaces:
                 - media
                 topologyKey: kubernetes.io/hostname
-                weight: 100
           containers:
           - args:
             - apollo.feralhosting.com
@@ -4513,14 +4508,13 @@ spec:
         spec:
           affinity:
             podAffinity:
-              preferredDuringSchedulingIgnoredDuringExecution:
+              requiredDuringSchedulingIgnoredDuringExecution:
               - labelSelector:
                   matchLabels:
                     app: smb-server
                 namespaces:
                 - media
                 topologyKey: kubernetes.io/hostname
-                weight: 100
           containers:
           - args:
             - apollo.feralhosting.com
@@ -4600,14 +4594,13 @@ spec:
         spec:
           affinity:
             podAffinity:
-              preferredDuringSchedulingIgnoredDuringExecution:
+              requiredDuringSchedulingIgnoredDuringExecution:
               - labelSelector:
                   matchLabels:
                     app: smb-server
                 namespaces:
                 - media
                 topologyKey: kubernetes.io/hostname
-                weight: 100
           containers:
           - args:
             - apollo.feralhosting.com
@@ -4687,14 +4680,13 @@ spec:
         spec:
           affinity:
             podAffinity:
-              preferredDuringSchedulingIgnoredDuringExecution:
+              requiredDuringSchedulingIgnoredDuringExecution:
               - labelSelector:
                   matchLabels:
                     app: smb-server
                 namespaces:
                 - media
                 topologyKey: kubernetes.io/hostname
-                weight: 100
           containers:
           - args:
             - apollo.feralhosting.com

@@ -3868,7 +3868,7 @@ spec:
     metadata:
       labels:
         app: plex
-        configmap-version: "15"
+        configmap-version: "16"
     spec:
       affinity:
         podAffinity:

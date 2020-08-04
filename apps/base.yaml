@@ -3874,7 +3874,7 @@ spec:
         - name: VERSION
           value: docker
         - name: PLEX_CLAIM
-          value: claim-kXqRnmvUKXxnLauyc6j-
+          value: claim-Pz1vG9X9wc8oTZzMKkxX
         image: linuxserver/plex
         imagePullPolicy: Always
         name: plex

@@ -4044,6 +4044,7 @@ spec:
           name: games
         - mountPath: /srv/downloads
           name: downloads
+          readOnly: true
         - mountPath: /srv/videos
           name: videos
         - mountPath: /config
@@ -4272,6 +4273,7 @@ spec:
           name: games
         - mountPath: /srv/downloads
           name: downloads
+          readOnly: true
         - mountPath: /srv/videos
           name: videos
         - mountPath: /config

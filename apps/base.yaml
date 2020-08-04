@@ -5020,12 +5020,17 @@ metadata:
   name: plex-daemon
   namespace: media
 spec:
-  selector: null
+  selector:
+    matchLabels:
+      name: plex-daemon
   template:
-    spec:
+    metadata:
       containers:
       - image: linuxserver/plex
         name: plex-daemon
+      labels:
+        name: plex-daemon
+    spec: null
 ---
 apiVersion: apps/v1
 kind: DaemonSet

@@ -5025,12 +5025,12 @@ spec:
       name: plex-daemon
   template:
     metadata:
+      labels:
+        name: plex-daemon
+    spec:
       containers:
       - image: linuxserver/plex
         name: plex-daemon
-      labels:
-        name: plex-daemon
-    spec: null
 ---
 apiVersion: apps/v1
 kind: DaemonSet

@@ -4175,6 +4175,15 @@ spec:
         app: sonarr
         configmap-version: "14"
     spec:
+      affinity:
+        podAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+          - labelSelector:
+              matchLabels:
+                app: smb-server
+            namespaces:
+            - media
+            topologyKey: kubernetes.io/hostname
       containers:
       - env:
         - name: PGID

@@ -3808,8 +3808,17 @@ spec:
     metadata:
       labels:
         app: jackett
-        configmap-version: "14"
+        configmap-version: "15"
     spec:
+      affinity:
+        podAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+          - labelSelector:
+              matchLabels:
+                app: smb-server
+            namespaces:
+            - media
+            topologyKey: kubernetes.io/hostname
       containers:
       - env:
         - name: PGID
@@ -3859,8 +3868,17 @@ spec:
     metadata:
       labels:
         app: plex
-        configmap-version: "14"
+        configmap-version: "15"
     spec:
+      affinity:
+        podAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+          - labelSelector:
+              matchLabels:
+                app: smb-server
+            namespaces:
+            - media
+            topologyKey: kubernetes.io/hostname
       containers:
       - env:
         - name: PGID
@@ -3954,8 +3972,17 @@ spec:
     metadata:
       labels:
         app: radarr
-        configmap-version: "14"
+        configmap-version: "15"
     spec:
+      affinity:
+        podAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+          - labelSelector:
+              matchLabels:
+                app: smb-server
+            namespaces:
+            - media
+            topologyKey: kubernetes.io/hostname
       containers:
       - env:
         - name: PGID
@@ -4173,7 +4200,7 @@ spec:
     metadata:
       labels:
         app: sonarr
-        configmap-version: "14"
+        configmap-version: "15"
     spec:
       affinity:
         podAffinity:
@@ -4393,6 +4420,15 @@ spec:
     spec:
       template:
         spec:
+          affinity:
+            podAffinity:
+              preferredDuringSchedulingIgnoredDuringExecution:
+              - labelSelector:
+                  matchLabels:
+                    app: smb-server
+                namespaces:
+                - media
+                topologyKey: kubernetes.io/hostname
           containers:
           - args:
             - apollo.feralhosting.com
@@ -4470,6 +4506,15 @@ spec:
     spec:
       template:
         spec:
+          affinity:
+            podAffinity:
+              preferredDuringSchedulingIgnoredDuringExecution:
+              - labelSelector:
+                  matchLabels:
+                    app: smb-server
+                namespaces:
+                - media
+                topologyKey: kubernetes.io/hostname
           containers:
           - args:
             - apollo.feralhosting.com
@@ -4547,6 +4592,15 @@ spec:
     spec:
       template:
         spec:
+          affinity:
+            podAffinity:
+              preferredDuringSchedulingIgnoredDuringExecution:
+              - labelSelector:
+                  matchLabels:
+                    app: smb-server
+                namespaces:
+                - media
+                topologyKey: kubernetes.io/hostname
           containers:
           - args:
             - apollo.feralhosting.com
@@ -4624,6 +4678,15 @@ spec:
     spec:
       template:
         spec:
+          affinity:
+            podAffinity:
+              preferredDuringSchedulingIgnoredDuringExecution:
+              - labelSelector:
+                  matchLabels:
+                    app: smb-server
+                namespaces:
+                - media
+                topologyKey: kubernetes.io/hostname
           containers:
           - args:
             - apollo.feralhosting.com

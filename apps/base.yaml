@@ -3973,8 +3973,9 @@ spec:
       - name: plex-config
         persistentVolumeClaim:
           claimName: plex-config
-      - emptyDir: {}
-        name: plex-transcode
+      - name: plex-transcode
+        persistentVolumeClaim:
+          claimName: plex-transcode
 ---
 apiVersion: apps/v1
 kind: Deployment
@@ -5699,6 +5700,19 @@ spec:
   resources:
     requests:
       storage: 1000Gi
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: plex-transcode
+  namespace: media
+spec:
+  accessModes:
+  - ReadWriteOnce
+  resources:
+    requests:
+      storage: 1000Gi
+  storageClassName: rook-ceph-block-scratch
 ---
 apiVersion: v1
 kind: PersistentVolumeClaim

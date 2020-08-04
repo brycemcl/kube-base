@@ -3945,6 +3945,10 @@ spec:
           name: plex-config
         - mountPath: /transcode
           name: plex-transcode
+        - mountPath: /optimize/tv
+          name: plex-optimize-tv
+        - mountPath: /optimize/movies
+          name: plex-optimize-movies
       volumes:
       - name: photos
         persistentVolumeClaim:
@@ -3976,6 +3980,12 @@ spec:
       - name: plex-transcode
         persistentVolumeClaim:
           claimName: plex-transcode
+      - name: plex-optimize-tv
+        persistentVolumeClaim:
+          claimName: plex-optimize-tv
+      - name: plex-optimize-movies
+        persistentVolumeClaim:
+          claimName: plex-optimize-movies
 ---
 apiVersion: apps/v1
 kind: Deployment
@@ -5702,6 +5712,30 @@ spec:
   resources:
     requests:
       storage: 1000Gi
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: plex-optimize-movies
+  namespace: media
+spec:
+  accessModes:
+  - ReadWriteOnce
+  resources:
+    requests:
+      storage: 6000Gi
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: plex-optimize-tv
+  namespace: media
+spec:
+  accessModes:
+  - ReadWriteOnce
+  resources:
+    requests:
+      storage: 6000Gi
 ---
 apiVersion: v1
 kind: PersistentVolumeClaim

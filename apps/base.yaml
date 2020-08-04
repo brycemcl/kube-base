@@ -3842,101 +3842,6 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   labels:
-    app: plex
-  name: plex
-  namespace: media
-spec:
-  replicas: 1
-  selector:
-    matchLabels:
-      app: plex
-  strategy:
-    rollingUpdate:
-      maxSurge: 1
-      maxUnavailable: 1
-    type: RollingUpdate
-  template:
-    metadata:
-      labels:
-        app: plex
-        configmap-version: "14"
-    spec:
-      containers:
-      - env:
-        - name: PGID
-          value: "1000"
-        - name: PUID
-          value: "1000"
-        - name: TZ
-          value: Canada/Pacific
-        - name: UMASK_SET
-          value: "000"
-        - name: VERSION
-          value: docker
-        - name: PLEX_CLAIM
-          value: claim-Pz1vG9X9wc8oTZzMKkxX
-        image: linuxserver/plex
-        imagePullPolicy: Always
-        name: plex
-        resources:
-          limits:
-            cpu: "3"
-            memory: 2000Mi
-          requests:
-            cpu: ".1"
-            memory: 100Mi
-        volumeMounts:
-        - mountPath: /srv/bryce
-          name: bryce
-        - mountPath: /srv/anacleto
-          name: anacleto
-        - mountPath: /srv/photos
-          name: photos
-        - mountPath: /srv/tv
-          name: tv
-        - mountPath: /srv/movies
-          name: movies
-        - mountPath: /srv/games
-          name: games
-        - mountPath: /srv/downloads
-          name: downloads
-        - mountPath: /srv/videos
-          name: videos
-        - mountPath: /config
-          name: plex-config
-      volumes:
-      - name: photos
-        persistentVolumeClaim:
-          claimName: smb-photos
-      - name: tv
-        persistentVolumeClaim:
-          claimName: smb-tv
-      - name: movies
-        persistentVolumeClaim:
-          claimName: smb-movies
-      - name: games
-        persistentVolumeClaim:
-          claimName: smb-games
-      - name: downloads
-        persistentVolumeClaim:
-          claimName: smb-downloads
-      - name: videos
-        persistentVolumeClaim:
-          claimName: smb-videos
-      - name: anacleto
-        persistentVolumeClaim:
-          claimName: smb-anacleto
-      - name: bryce
-        persistentVolumeClaim:
-          claimName: smb-bryce
-      - name: plex-config
-        persistentVolumeClaim:
-          claimName: plex-config
----
-apiVersion: apps/v1
-kind: Deployment
-metadata:
-  labels:
     app: radarr
   name: radarr
   namespace: media
@@ -5108,6 +5013,18 @@ spec:
           path: /var/lib/kubelet/plugins_registry/
           type: DirectoryOrCreate
         name: registration-dir
+---
+apiVersion: apps/v1
+kind: DaemonSet
+metadata:
+  name: plex-daemon
+  namespace: media
+spec:
+  template:
+    spec:
+      containers:
+      - image: linuxserver/plex
+        name: plex-daemon
 ---
 apiVersion: apps/v1
 kind: DaemonSet

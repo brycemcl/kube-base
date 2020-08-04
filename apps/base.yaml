@@ -5020,6 +5020,7 @@ metadata:
   name: plex-daemon
   namespace: media
 spec:
+  selector: null
   template:
     spec:
       containers:

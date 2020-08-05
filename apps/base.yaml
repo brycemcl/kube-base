@@ -4530,7 +4530,7 @@ spec:
           - name: lftp-netrc
             secret:
               secretName: lftp-netrc
-  schedule: '* 1 * * *'
+  schedule: '* * * * *'
   startingDeadlineSeconds: 60
 ---
 apiVersion: batch/v1beta1
@@ -4616,7 +4616,7 @@ spec:
           - name: lftp-netrc
             secret:
               secretName: lftp-netrc
-  schedule: '* 1 * * *'
+  schedule: '* * * * *'
   startingDeadlineSeconds: 60
 ---
 apiVersion: batch/v1beta1
@@ -4702,7 +4702,7 @@ spec:
           - name: lftp-netrc
             secret:
               secretName: lftp-netrc
-  schedule: '* 1 * * *'
+  schedule: '* * * * *'
   startingDeadlineSeconds: 60
 ---
 apiVersion: batch/v1beta1
@@ -4788,7 +4788,7 @@ spec:
           - name: lftp-netrc
             secret:
               secretName: lftp-netrc
-  schedule: '* 1 * * *'
+  schedule: '* * * * *'
   startingDeadlineSeconds: 60
 ---
 apiVersion: policy/v1beta1

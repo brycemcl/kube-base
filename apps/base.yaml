@@ -4470,8 +4470,8 @@ spec:
           containers:
           - args:
             - apollo.feralhosting.com
-            - ./private/downloaded/tv/
-            - /srv/downloads/tv/
+            - ./private/downloaded/tv/Marvels.Agents.of.S.H.I.E.L.D.S07E11.720p.HDTV.x264-KILLERS[rartv]/
+            - /srv/downloads/tv/Marvels.Agents.of.S.H.I.E.L.D.S07E11.720p.HDTV.x264-KILLERS[rartv]/
             image: brycemclachlan/lftp
             imagePullPolicy: Always
             name: lftp

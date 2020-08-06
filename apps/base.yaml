@@ -4029,7 +4029,7 @@ spec:
           value: Canada/Pacific
         - name: UMASK_SET
           value: "000"
-        image: linuxserver/radarr:preview
+        image: linuxserver/radarr
         imagePullPolicy: Always
         name: radarr
         resources:

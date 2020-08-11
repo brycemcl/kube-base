@@ -5196,7 +5196,42 @@ spec:
   rbdMirroring:
     workers: 0
   removeOSDsIfOutAndSafeToRemove: false
-  resources: null
+  resources:
+    crashcollector:
+      limits:
+        cpu: ".25"
+        memory: 256Mi
+      requests:
+        cpu: ".25"
+        memory: 256Mi
+    mgr:
+      limits:
+        cpu: ".25"
+        memory: 512Mi
+      requests:
+        cpu: ".25"
+        memory: 512Mi
+    mon:
+      limits:
+        cpu: ".5"
+        memory: 1024Mi
+      requests:
+        cpu: ".5"
+        memory: 1024Mi
+    osd:
+      limits:
+        cpu: "1"
+        memory: 2048Mi
+      requests:
+        cpu: ".5"
+        memory: 2048Mi
+    prepareosd:
+      limits:
+        cpu: ".25"
+        memory: 256Mi
+      requests:
+        cpu: ".25"
+        memory: 256Mi
   skipUpgradeChecks: false
   storage:
     config: null

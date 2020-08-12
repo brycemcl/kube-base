@@ -3614,7 +3614,7 @@ spec:
           protocol: UDP
         resources:
           limits:
-            cpu: "2"
+            cpu: "4"
             memory: 4000Mi
           requests:
             cpu: "1"
@@ -5341,7 +5341,7 @@ spec:
         cpu: "1"
         memory: 2048Mi
       requests:
-        cpu: ".5"
+        cpu: "1"
         memory: 2048Mi
     prepareosd:
       limits:

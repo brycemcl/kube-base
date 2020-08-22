@@ -21,6 +21,6 @@ sudo fallocate -l 50G /loop0.img
 sudo chmod 600 /loop0.img
 sudo systemctl enable losetup.service
 sudo apt purge --auto-remove snapd
-
+kubeadm config images pull
 
 sudo reboot

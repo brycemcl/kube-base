@@ -15,10 +15,11 @@ sudo apt-mark hold kubelet kubeadm kubectl
 sudo cp node-config/containerd.conf /etc/modules-load.d/containerd.conf
 sudo cp node-config/k8s.conf /etc/sysctl.d/k8s.conf 
 sudo cp node-config/haproxy.cfg /etc/haproxy/haproxy.cfg
+sudo cp node-config/losetup.service /etc/systemd/system/losetup.service
 sudo cp node-config/sys-fs-bpf.mount /etc/systemd/system/sys-fs-bpf.mount
 sudo fallocate -l 50G /loop0.img
 sudo chmod 600 /loop0.img
-sudo losetup /dev/loop100 /loop0.img
+sud systemctl enable losetup.service
 
 
 

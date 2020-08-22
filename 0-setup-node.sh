@@ -18,7 +18,7 @@ sudo cp node-config/haproxy.cfg /etc/haproxy/haproxy.cfg
 sudo cp node-config/sys-fs-bpf.mount /etc/systemd/system/sys-fs-bpf.mount
 sudo fallocate -l 50G /loop0.img
 sudo chmod 600 /loop0.img
-sudo losetup /dev/loop0 /loop0.img
+sudo losetup /dev/loop_ceph0 /loop0.img
 
 
 

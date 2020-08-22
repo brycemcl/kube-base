@@ -6539,6 +6539,33 @@ spec:
 apiVersion: batch/v1
 kind: Job
 metadata:
+  name: dbench
+  namespace: dbench
+spec:
+  backoffLimit: 4
+  template:
+    spec:
+      containers:
+      - env:
+        - name: DBENCH_MOUNTPOINT
+          value: /data
+        - name: FIO_SIZE
+          value: 1G
+        image: sotoaster/dbench:latest
+        imagePullPolicy: IfNotPresent
+        name: dbench
+        volumeMounts:
+        - mountPath: /data
+          name: dbench-pv
+      restartPolicy: Never
+      volumes:
+      - name: dbench-pv
+        persistentVolumeClaim:
+          claimName: dbench
+---
+apiVersion: batch/v1
+kind: Job
+metadata:
   annotations:
     helm.sh/hook: pre-install,pre-upgrade
     helm.sh/hook-delete-policy: before-hook-creation,hook-succeeded
@@ -6841,3 +6868,16 @@ spec:
   - projected
   - downwardAPI
   - persistentVolumeClaim
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: dbench
+  namespace: dbench
+spec:
+  accessModes:
+  - ReadWriteOnce
+  resources:
+    requests:
+      storage: 5Gi
+  storageClassName: '...'

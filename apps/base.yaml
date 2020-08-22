@@ -816,7 +816,6 @@ metadata:
     linkerd.io/control-plane-component: proxy-injector
     linkerd.io/control-plane-ns: linkerd
   name: linkerd-proxy-injector-webhook-config
-  namespace: linkerd
 webhooks:
 - clientConfig:
     caBundle: LS0tLS1CRUdJTiBDRVJUSUZJQ0FURS0tLS0tCk1JSURKekNDQWcrZ0F3SUJBZ0lSQUpnNGtSeitTbEc1T0hnOW54cFRaWmd3RFFZSktvWklodmNOQVFFTEJRQXcKTFRFck1Da0dBMVVFQXhNaWJHbHVhMlZ5WkMxd2NtOTRlUzFwYm1wbFkzUnZjaTVzYVc1clpYSmtMbk4yWXpBZQpGdzB5TURBNE1UWXdNVFV3TUROYUZ3MHlNVEE0TVRZd01UVXdNRE5hTUMweEt6QXBCZ05WQkFNVElteHBibXRsCmNtUXRjSEp2ZUhrdGFXNXFaV04wYjNJdWJHbHVhMlZ5WkM1emRtTXdnZ0VpTUEwR0NTcUdTSWIzRFFFQkFRVUEKQTRJQkR3QXdnZ0VLQW9JQkFRQ3h4VWZEYVQ1cVEyQjlCRm50eXhhTTF2UXlBRzZuY2RlN3JMbG9QWHE4dXFiQgpRTnpiV2NkbGpQcDBMRVBMREFuYWltNFhPWHRsRnZMbk14Q3FkckdVSXZxemJwRkhJRGNNMW9OZXhSRnI3WFZMCjlYTk8rTFBaRnpUZ2lQOTZRWGV5cHhaWGNwUVM3KzRlSWZueEtoZy9kc1RDSEJlNzNyR2cvSUM0NWNUN2E2ZDgKd0xHWGF0cXVCaW43MDZQSHNqbzJMTE0wOFRrZE83MHJ5aW8zV3N2SDBXeEZPdEp1L3FiUmNjY09nRjBtRXN6Zwo5eDFQM256TDkvbzFnRndXNHQxN0M3NEJqV0xINWYwRHZ2QUMxTldydW10RUhZVHNlZStReUJydnV1MzlIMGdUCnYybUFDR21EZUF5Yk9GVXRCRmdwMy9kak5ubTZ6RXBPTHo4aDkvQTdBZ01CQUFHalFqQkFNQTRHQTFVZER3RUIKL3dRRUF3SUNwREFkQmdOVkhTVUVGakFVQmdnckJnRUZCUWNEQVFZSUt3WUJCUVVIQXdJd0R3WURWUjBUQVFILwpCQVV3QXdFQi96QU5CZ2txaGtpRzl3MEJBUXNGQUFPQ0FRRUFOUmNSSW8xaWJzWkM5NUhNVjdrSHg2c1NWamJVCjA0ZllUYzVteEZyRVE5Z1RHeHhPdzZYYU4yRzJSMGxha0VzQmxwcmVYdHFoc2JEOVBiS3FYRm91LzVpRld4RFEKUUJ6NnhRQkRtR1VUMTA3WGRuTVRnQmRnSEZRSEtEbzYxbjBxTFJXd1J1SGVWeUFweUVMMmJRZmpMWXVMUVNMNQpSZGIvTS9FQlBBK2VrWWoyeXVsdUlWeEowRWtBUENRT3hXZWwweUYvOVpCOGpDM2ZRV1BQVk4rWWhJYWNJQklsCmZBOFlzM2R4N3FtbE8vYmJscGlERkd5c2JrSmJORDJQUTNmTzBjbzcyU1p6WWZEZy9UamxYdGRFMUcrRU01QmIKRVlJWGNSRDZHajlId0R0ank1bTVCSEhZQThKTlZxTFhRK1g1ZFlUeWVhOHowSnNURVV0L0dTcGhEdz09Ci0tLS0tRU5EIENFUlRJRklDQVRFLS0tLS0K
@@ -886,7 +885,6 @@ metadata:
     linkerd.io/control-plane-component: sp-validator
     linkerd.io/control-plane-ns: linkerd
   name: linkerd-sp-validator-webhook-config
-  namespace: linkerd
 webhooks:
 - clientConfig:
     caBundle: LS0tLS1CRUdJTiBDRVJUSUZJQ0FURS0tLS0tCk1JSURJekNDQWd1Z0F3SUJBZ0lSQU9XZlRENDF2OEREOW9odW43L3dOR0F3RFFZSktvWklodmNOQVFFTEJRQXcKS3pFcE1DY0dBMVVFQXhNZ2JHbHVhMlZ5WkMxemNDMTJZV3hwWkdGMGIzSXViR2x1YTJWeVpDNXpkbU13SGhjTgpNakF3T0RFMk1ERTFNREF5V2hjTk1qRXdPREUyTURFMU1EQXlXakFyTVNrd0p3WURWUVFERXlCc2FXNXJaWEprCkxYTndMWFpoYkdsa1lYUnZjaTVzYVc1clpYSmtMbk4yWXpDQ0FTSXdEUVlKS29aSWh2Y05BUUVCQlFBRGdnRVAKQURDQ0FRb0NnZ0VCQUo3MnFBaWVzNFVlazlLeWtkbGk1TjNjWGYrb0x6SEZrVktYOVVEKzFrNzRSR1dNZnNvSQpKSndhblI5dWQ3ZGpSdUFtRGFJT1RvSGFKRHFVSEtPbDhGZ2hXSG9ybG9hUmZsendTZ0xSU3BUcDRsR0ZoeitJCkZhVzJWUE9ORGtOU2luUmNpczFFUFhBcisrQ3didzQybklIWmVreXRHK0grMnVDNW1TeXBDVG11SDNqY1h6RjQKcnpCSE95eEJMajlIMkRxSjdvU0UwSWRKaThwbE01Ym5GMXFROTJGVXVmL3ZuVjdYTFBTL01wU0xWWFowMmd5QgppWm1IeEFZSGxhOW1yMTY4eU5wVXhDOEtWTEFGcjdNaDVTVDU1M3FmL2JUUTVuZUtDQlBCYzd2YnRZSGg5YVpjCklMSVBxWitwbHo2dW00dHFzOFBpUUVlUlRwSHpTMmxxYis4Q0F3RUFBYU5DTUVBd0RnWURWUjBQQVFIL0JBUUQKQWdLa01CMEdBMVVkSlFRV01CUUdDQ3NHQVFVRkJ3TUJCZ2dyQmdFRkJRY0RBakFQQmdOVkhSTUJBZjhFQlRBRApBUUgvTUEwR0NTcUdTSWIzRFFFQkN3VUFBNElCQVFCMXNqTGJkU0YrbmozWFYzaFEvU2R5VjZCODdHU1MxSHl2CldyKzZLaGRQY2xmNVZ3enEvV21ac1lYbDlrMVk3dGRxeTd6ZEhEbmJxYWZsRjVkU3FkbVZGRnp0TWxKVUVqYWsKMEpxRlZUQVlxVmJ5T3ZmNTV0WmltQ0p3Wmlibjl6blNURlFWZ2I4UWM4L2o2eU1Eb0FPZTZIWHd5U3MvZ1hnMApFamxJZDdhcTF2R3hqd3BhNUM4ZVpUME1mT1NUQmJyMWtCZ0o2eTMwdlVNUFJ3eU5DNHluMm56TmhMOEs0SzlMCnhJM0lnMTRzN1ZvQzN4Q2JraHcyWC9GZW5EbHRoU0ZpT3hRVUhKc25KUkNQTmhOUnpJbldjblZsZVhUOFAzWlUKeDVDZDZwZWpEMkpDMW4rRzJFZGkzd3I5M1gzZGQzL25QUE1DcEJ4M1hSaXA4SGxVK1pQRQotLS0tLUVORCBDRVJUSUZJQ0FURS0tLS0tCg==
@@ -974,7 +972,7 @@ metadata:
   labels:
     linkerd.io/cni-resource: "true"
   name: linkerd-cni
-  namespace: linkerd
+  namespace: linkerd-cni
 ---
 apiVersion: v1
 kind: ServiceAccount
@@ -1262,7 +1260,7 @@ metadata:
   labels:
     linkerd.io/cni-resource: "true"
   name: linkerd-cni
-  namespace: linkerd
+  namespace: linkerd-cni
 rules:
 - apiGroups:
   - extensions
@@ -2870,6 +2868,23 @@ subjects:
 apiVersion: rbac.authorization.k8s.io/v1
 kind: RoleBinding
 metadata:
+  labels:
+    linkerd.io/control-plane-component: tap
+    linkerd.io/control-plane-ns: linkerd
+  name: linkerd-linkerd-tap-auth-reader
+  namespace: kube-system
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: Role
+  name: extension-apiserver-authentication-reader
+subjects:
+- kind: ServiceAccount
+  name: linkerd-tap
+  namespace: linkerd
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
   name: metrics-server-auth-reader
   namespace: kube-system
 roleRef:
@@ -2887,7 +2902,7 @@ metadata:
   labels:
     linkerd.io/cni-resource: "true"
   name: linkerd-cni
-  namespace: linkerd
+  namespace: linkerd-cni
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: Role
@@ -2895,7 +2910,7 @@ roleRef:
 subjects:
 - kind: ServiceAccount
   name: linkerd-cni
-  namespace: linkerd
+  namespace: linkerd-cni
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: RoleBinding
@@ -2911,23 +2926,6 @@ roleRef:
 subjects:
 - kind: ServiceAccount
   name: linkerd-heartbeat
-  namespace: linkerd
----
-apiVersion: rbac.authorization.k8s.io/v1
-kind: RoleBinding
-metadata:
-  labels:
-    linkerd.io/control-plane-component: tap
-    linkerd.io/control-plane-ns: linkerd
-  name: linkerd-linkerd-tap-auth-reader
-  namespace: linkerd
-roleRef:
-  apiGroup: rbac.authorization.k8s.io
-  kind: Role
-  name: extension-apiserver-authentication-reader
-subjects:
-- kind: ServiceAccount
-  name: linkerd-tap
   namespace: linkerd
 ---
 apiVersion: rbac.authorization.k8s.io/v1
@@ -3576,7 +3574,7 @@ roleRef:
 subjects:
 - kind: ServiceAccount
   name: linkerd-cni
-  namespace: linkerd
+  namespace: linkerd-cni
 ---
 apiVersion: rbac.authorization.k8s.io/v1beta1
 kind: ClusterRoleBinding
@@ -3717,7 +3715,7 @@ metadata:
   labels:
     linkerd.io/cni-resource: "true"
   name: linkerd-cni-config
-  namespace: linkerd
+  namespace: linkerd-cni
 ---
 apiVersion: v1
 data:
@@ -6477,7 +6475,7 @@ metadata:
     k8s-app: linkerd-cni
     linkerd.io/cni-resource: "true"
   name: linkerd-cni
-  namespace: linkerd
+  namespace: linkerd-cni
 spec:
   selector:
     matchLabels:
@@ -6746,65 +6744,6 @@ spec:
 apiVersion: policy/v1beta1
 kind: PodSecurityPolicy
 metadata:
-  labels:
-    linkerd.io/cni-resource: "true"
-  name: linkerd-linkerd-cni-cni
-  namespace: linkerd
-spec:
-  allowPrivilegeEscalation: false
-  fsGroup:
-    rule: RunAsAny
-  hostNetwork: true
-  runAsUser:
-    rule: RunAsAny
-  seLinux:
-    rule: RunAsAny
-  supplementalGroups:
-    rule: RunAsAny
-  volumes:
-  - hostPath
-  - secret
----
-apiVersion: policy/v1beta1
-kind: PodSecurityPolicy
-metadata:
-  labels:
-    linkerd.io/control-plane-ns: linkerd
-  name: linkerd-linkerd-control-plane
-  namespace: linkerd
-spec:
-  allowPrivilegeEscalation: false
-  fsGroup:
-    ranges:
-    - max: 65535
-      min: 10001
-    rule: MustRunAs
-  hostIPC: false
-  hostNetwork: false
-  hostPID: false
-  readOnlyRootFilesystem: true
-  requiredDropCapabilities:
-  - ALL
-  runAsUser:
-    rule: MustRunAsNonRoot
-  seLinux:
-    rule: RunAsAny
-  supplementalGroups:
-    ranges:
-    - max: 65535
-      min: 10001
-    rule: MustRunAs
-  volumes:
-  - configMap
-  - emptyDir
-  - secret
-  - projected
-  - downwardAPI
-  - persistentVolumeClaim
----
-apiVersion: policy/v1beta1
-kind: PodSecurityPolicy
-metadata:
   annotations:
     seccomp.security.alpha.kubernetes.io/allowedProfileNames: runtime/default
     seccomp.security.alpha.kubernetes.io/defaultProfileName: runtime/default
@@ -6845,3 +6784,60 @@ spec:
   - projected
   - hostPath
   - flexVolume
+---
+apiVersion: policy/v1beta1
+kind: PodSecurityPolicy
+metadata:
+  labels:
+    linkerd.io/cni-resource: "true"
+  name: linkerd-linkerd-cni-cni
+spec:
+  allowPrivilegeEscalation: false
+  fsGroup:
+    rule: RunAsAny
+  hostNetwork: true
+  runAsUser:
+    rule: RunAsAny
+  seLinux:
+    rule: RunAsAny
+  supplementalGroups:
+    rule: RunAsAny
+  volumes:
+  - hostPath
+  - secret
+---
+apiVersion: policy/v1beta1
+kind: PodSecurityPolicy
+metadata:
+  labels:
+    linkerd.io/control-plane-ns: linkerd
+  name: linkerd-linkerd-control-plane
+spec:
+  allowPrivilegeEscalation: false
+  fsGroup:
+    ranges:
+    - max: 65535
+      min: 10001
+    rule: MustRunAs
+  hostIPC: false
+  hostNetwork: false
+  hostPID: false
+  readOnlyRootFilesystem: true
+  requiredDropCapabilities:
+  - ALL
+  runAsUser:
+    rule: MustRunAsNonRoot
+  seLinux:
+    rule: RunAsAny
+  supplementalGroups:
+    ranges:
+    - max: 65535
+      min: 10001
+    rule: MustRunAs
+  volumes:
+  - configMap
+  - emptyDir
+  - secret
+  - projected
+  - downwardAPI
+  - persistentVolumeClaim

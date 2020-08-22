@@ -9,7 +9,7 @@ deb https://apt.kubernetes.io/ kubernetes-xenial main
 EOF
 
 sudo apt-get update
-sudo apt-get upgrade -y
+sudo apt-get dist-upgrade -y
 sudo apt-get install -y containerd kubectl kubelet kubeadm haproxy apache2-utils
 sudo apt-mark hold kubelet kubeadm kubectl
 sudo cp node-config/containerd.conf /etc/modules-load.d/containerd.conf
@@ -19,8 +19,8 @@ sudo cp node-config/losetup.service /etc/systemd/system/losetup.service
 sudo cp node-config/sys-fs-bpf.mount /etc/systemd/system/sys-fs-bpf.mount
 sudo fallocate -l 50G /loop0.img
 sudo chmod 600 /loop0.img
-sud systemctl enable losetup.service
-
+sudo systemctl enable losetup.service
+sudo apt purge --auto-remove snapd
 
 
 sudo reboot

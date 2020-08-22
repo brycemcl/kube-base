@@ -20,7 +20,7 @@ sudo cp node-config/sys-fs-bpf.mount /etc/systemd/system/sys-fs-bpf.mount
 sudo fallocate -l 50G /loop0.img
 sudo chmod 600 /loop0.img
 sudo systemctl enable losetup.service
-sudo apt purge --auto-remove snapd
+sudo apt purge --auto-remove snapd -y
 kubeadm config images pull
 
 sudo reboot

@@ -83,6 +83,12 @@ spec:
               - aggressive
               - force
               type: string
+            crushRoot:
+              type: string
+            enableRBDStats:
+              description: EnableRBDStats is used to enable gathering of statistics
+                for all RBD images in the pool
+              type: boolean
             erasureCoded:
               properties:
                 codingChunks:
@@ -95,6 +101,8 @@ spec:
                   type: integer
             failureDomain:
               type: string
+            parameters:
+              type: object
             replicated:
               properties:
                 requireSafeReplicaSize:
@@ -166,6 +174,8 @@ spec:
     plural: cephclusters
     singular: cephcluster
   scope: Namespaced
+  subresources:
+    status: {}
   validation:
     openAPIV3Schema:
       properties:
@@ -180,9 +190,20 @@ spec:
                   type: string
             cleanupPolicy:
               properties:
-                deleteDataDirOnHosts:
+                confirmation:
                   pattern: ^$|^yes-really-destroy-data$
                   type: string
+                sanitizeDisks:
+                  properties:
+                    dataSource:
+                      pattern: ^(zero|random)$
+                      type: string
+                    iteration:
+                      format: int32
+                      type: integer
+                    method:
+                      pattern: ^(complete|quick)$
+                      type: string
             continueUpgradeAfterChecksEvenIfNotHealthy:
               type: boolean
             dashboard:
@@ -210,10 +231,22 @@ spec:
                   type: boolean
                 osdMaintenanceTimeout:
                   type: integer
+            driveGroups:
+              items:
+                properties:
+                  name:
+                    type: string
+                  placement: {}
+                  spec: {}
+                required:
+                - name
+                - spec
+              type: array
             external:
               properties:
                 enable:
                   type: boolean
+            healthCheck: {}
             mgr:
               properties:
                 modules:
@@ -236,6 +269,12 @@ spec:
               properties:
                 enabled:
                   type: boolean
+                externalMgrEndpoints:
+                  items:
+                    properties:
+                      ip:
+                        type: string
+                  type: array
                 rulesNamespace:
                   type: string
             network:
@@ -246,10 +285,6 @@ spec:
                   type: string
                 selectors: {}
             placement: {}
-            rbdMirroring:
-              properties:
-                workers:
-                  type: integer
             removeOSDsIfOutAndSafeToRemove:
               type: boolean
             resources: {}
@@ -355,6 +390,8 @@ spec:
                     - aggressive
                     - force
                     type: string
+                  crushRoot:
+                    type: string
                   erasureCoded:
                     properties:
                       codingChunks:
@@ -367,6 +404,8 @@ spec:
                         type: integer
                   failureDomain:
                     type: string
+                  parameters:
+                    type: object
                   replicated:
                     properties:
                       requireSafeReplicaSize:
@@ -385,6 +424,8 @@ spec:
                   - passive
                   - aggressive
                   - force
+                  type: string
+                crushRoot:
                   type: string
                 erasureCoded:
                   properties:
@@ -460,6 +501,22 @@ spec:
 apiVersion: apiextensions.k8s.io/v1beta1
 kind: CustomResourceDefinition
 metadata:
+  name: cephobjectrealms.ceph.rook.io
+spec:
+  group: ceph.rook.io
+  names:
+    kind: CephObjectRealm
+    listKind: CephObjectRealmList
+    plural: cephobjectrealms
+    singular: cephobjectrealm
+  scope: Namespaced
+  subresources:
+    status: {}
+  version: v1
+---
+apiVersion: apiextensions.k8s.io/v1beta1
+kind: CustomResourceDefinition
+metadata:
   name: cephobjectstores.ceph.rook.io
 spec:
   group: ceph.rook.io
@@ -486,6 +543,8 @@ spec:
                   - aggressive
                   - force
                   type: string
+                crushRoot:
+                  type: string
                 erasureCoded:
                   properties:
                     codingChunks:
@@ -494,6 +553,8 @@ spec:
                       type: integer
                 failureDomain:
                   type: string
+                parameters:
+                  type: object
                 replicated:
                   properties:
                     requireSafeReplicaSize:
@@ -503,6 +564,12 @@ spec:
             gateway:
               properties:
                 annotations: {}
+                externalRgwEndpoints:
+                  items:
+                    properties:
+                      ip:
+                        type: string
+                  type: array
                 instances:
                   type: integer
                 placement: {}
@@ -515,6 +582,14 @@ spec:
                 sslCertificateRef: {}
                 type:
                   type: string
+            healthCheck:
+              properties:
+                bucket:
+                  properties:
+                    enabled:
+                      type: boolean
+                    interval:
+                      type: string
             metadataPool:
               properties:
                 compressionMode:
@@ -525,6 +600,8 @@ spec:
                   - aggressive
                   - force
                   type: string
+                crushRoot:
+                  type: string
                 erasureCoded:
                   properties:
                     codingChunks:
@@ -533,6 +610,8 @@ spec:
                       type: integer
                 failureDomain:
                   type: string
+                parameters:
+                  type: object
                 replicated:
                   properties:
                     requireSafeReplicaSize:
@@ -560,6 +639,63 @@ spec:
   scope: Namespaced
   subresources:
     status: {}
+  version: v1
+---
+apiVersion: apiextensions.k8s.io/v1beta1
+kind: CustomResourceDefinition
+metadata:
+  name: cephobjectzonegroups.ceph.rook.io
+spec:
+  group: ceph.rook.io
+  names:
+    kind: CephObjectZoneGroup
+    listKind: CephObjectZoneGroupList
+    plural: cephobjectzonegroups
+    singular: cephobjectzonegroup
+  scope: Namespaced
+  subresources:
+    status: {}
+  version: v1
+---
+apiVersion: apiextensions.k8s.io/v1beta1
+kind: CustomResourceDefinition
+metadata:
+  name: cephobjectzones.ceph.rook.io
+spec:
+  group: ceph.rook.io
+  names:
+    kind: CephObjectZone
+    listKind: CephObjectZoneList
+    plural: cephobjectzones
+    singular: cephobjectzone
+  scope: Namespaced
+  subresources:
+    status: {}
+  version: v1
+---
+apiVersion: apiextensions.k8s.io/v1beta1
+kind: CustomResourceDefinition
+metadata:
+  name: cephrbdmirrors.ceph.rook.io
+spec:
+  group: ceph.rook.io
+  names:
+    kind: CephRBDMirror
+    listKind: CephRBDMirrorList
+    plural: cephrbdmirrors
+    singular: cephrbdmirror
+  scope: Namespaced
+  subresources:
+    status: {}
+  validation:
+    openAPIV3Schema:
+      properties:
+        spec:
+          properties:
+            count:
+              maximum: 100
+              minimum: 1
+              type: integer
   version: v1
 ---
 apiVersion: apiextensions.k8s.io/v1beta1
@@ -917,6 +1053,12 @@ metadata:
     linkerd.io/control-plane-ns: linkerd
   name: linkerd-web
   namespace: linkerd
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: rook-ceph-admission-controller
+  namespace: rook-ceph
 ---
 apiVersion: v1
 kind: ServiceAccount
@@ -1494,9 +1636,7 @@ rules:
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRole
 metadata:
-  labels:
-    rbac.ceph.rook.io/aggregate-to-cephfs-csi-nodeplugin: "true"
-  name: cephfs-csi-nodeplugin-rules
+  name: cephfs-csi-nodeplugin
 rules:
 - apiGroups:
   - ""
@@ -1539,22 +1679,10 @@ rules:
   - get
   - list
 ---
-aggregationRule:
-  clusterRoleSelectors:
-  - matchLabels:
-      rbac.ceph.rook.io/aggregate-to-cephfs-csi-nodeplugin: "true"
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRole
 metadata:
-  name: cephfs-csi-nodeplugin
-rules: []
----
-apiVersion: rbac.authorization.k8s.io/v1
-kind: ClusterRole
-metadata:
-  labels:
-    rbac.ceph.rook.io/aggregate-to-cephfs-external-provisioner-runner: "true"
-  name: cephfs-external-provisioner-runner-rules
+  name: cephfs-external-provisioner-runner
 rules:
 - apiGroups:
   - ""
@@ -1603,6 +1731,57 @@ rules:
   - update
   - patch
 - apiGroups:
+  - snapshot.storage.k8s.io
+  resources:
+  - volumesnapshots
+  verbs:
+  - get
+  - list
+  - watch
+  - update
+- apiGroups:
+  - snapshot.storage.k8s.io
+  resources:
+  - volumesnapshotcontents
+  verbs:
+  - create
+  - get
+  - list
+  - watch
+  - update
+  - delete
+- apiGroups:
+  - snapshot.storage.k8s.io
+  resources:
+  - volumesnapshotclasses
+  verbs:
+  - get
+  - list
+  - watch
+- apiGroups:
+  - snapshot.storage.k8s.io
+  resources:
+  - volumesnapshotcontents/status
+  verbs:
+  - update
+- apiGroups:
+  - apiextensions.k8s.io
+  resources:
+  - customresourcedefinitions
+  verbs:
+  - create
+  - list
+  - watch
+  - delete
+  - get
+  - update
+- apiGroups:
+  - snapshot.storage.k8s.io
+  resources:
+  - volumesnapshots/status
+  verbs:
+  - update
+- apiGroups:
   - storage.k8s.io
   resources:
   - volumeattachments
@@ -1627,16 +1806,6 @@ rules:
   verbs:
   - update
   - patch
----
-aggregationRule:
-  clusterRoleSelectors:
-  - matchLabels:
-      rbac.ceph.rook.io/aggregate-to-cephfs-external-provisioner-runner: "true"
-apiVersion: rbac.authorization.k8s.io/v1
-kind: ClusterRole
-metadata:
-  name: cephfs-external-provisioner-runner
-rules: []
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRole
@@ -2019,9 +2188,7 @@ rules:
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRole
 metadata:
-  labels:
-    rbac.ceph.rook.io/aggregate-to-rbd-csi-nodeplugin: "true"
-  name: rbd-csi-nodeplugin-rules
+  name: rbd-csi-nodeplugin
 rules:
 - apiGroups:
   - ""
@@ -2071,22 +2238,10 @@ rules:
   - get
   - list
 ---
-aggregationRule:
-  clusterRoleSelectors:
-  - matchLabels:
-      rbac.ceph.rook.io/aggregate-to-rbd-csi-nodeplugin: "true"
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRole
 metadata:
-  name: rbd-csi-nodeplugin
-rules: []
----
-apiVersion: rbac.authorization.k8s.io/v1
-kind: ClusterRole
-metadata:
-  labels:
-    rbac.ceph.rook.io/aggregate-to-rbd-external-provisioner-runner: "true"
-  name: rbd-external-provisioner-runner-rules
+  name: rbd-external-provisioner-runner
 rules:
 - apiGroups:
   - ""
@@ -2181,6 +2336,12 @@ rules:
   - list
   - watch
 - apiGroups:
+  - snapshot.storage.k8s.io
+  resources:
+  - volumesnapshotcontents/status
+  verbs:
+  - update
+- apiGroups:
   - apiextensions.k8s.io
   resources:
   - customresourcedefinitions
@@ -2205,15 +2366,19 @@ rules:
   - update
   - patch
 ---
-aggregationRule:
-  clusterRoleSelectors:
-  - matchLabels:
-      rbac.ceph.rook.io/aggregate-to-rbd-external-provisioner-runner: "true"
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRole
 metadata:
-  name: rbd-external-provisioner-runner
-rules: []
+  name: rook-ceph-admission-controller-role
+rules:
+- apiGroups:
+  - ceph.rook.io
+  resources:
+  - '*'
+  verbs:
+  - get
+  - watch
+  - list
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRole
@@ -2275,9 +2440,8 @@ kind: ClusterRole
 metadata:
   labels:
     operator: rook
-    rbac.ceph.rook.io/aggregate-to-rook-ceph-cluster-mgmt: "true"
     storage-backend: ceph
-  name: rook-ceph-cluster-mgmt-rules
+  name: rook-ceph-cluster-mgmt
 rules:
 - apiGroups:
   - ""
@@ -2300,27 +2464,13 @@ rules:
   - update
   - delete
 ---
-aggregationRule:
-  clusterRoleSelectors:
-  - matchLabels:
-      rbac.ceph.rook.io/aggregate-to-rook-ceph-cluster-mgmt: "true"
 apiVersion: rbac.authorization.k8s.io/v1beta1
 kind: ClusterRole
 metadata:
   labels:
     operator: rook
     storage-backend: ceph
-  name: rook-ceph-cluster-mgmt
-rules: []
----
-apiVersion: rbac.authorization.k8s.io/v1beta1
-kind: ClusterRole
-metadata:
-  labels:
-    operator: rook
-    rbac.ceph.rook.io/aggregate-to-rook-ceph-global: "true"
-    storage-backend: ceph
-  name: rook-ceph-global-rules
+  name: rook-ceph-global
 rules:
 - apiGroups:
   - ""
@@ -2417,28 +2567,15 @@ rules:
   - csidrivers
   verbs:
   - create
----
-aggregationRule:
-  clusterRoleSelectors:
-  - matchLabels:
-      rbac.ceph.rook.io/aggregate-to-rook-ceph-global: "true"
-apiVersion: rbac.authorization.k8s.io/v1beta1
-kind: ClusterRole
-metadata:
-  labels:
-    operator: rook
-    storage-backend: ceph
-  name: rook-ceph-global
-rules: []
+  - delete
 ---
 apiVersion: rbac.authorization.k8s.io/v1beta1
 kind: ClusterRole
 metadata:
   labels:
     operator: rook
-    rbac.ceph.rook.io/aggregate-to-rook-ceph-mgr-cluster: "true"
     storage-backend: ceph
-  name: rook-ceph-mgr-cluster-rules
+  name: rook-ceph-mgr-cluster
 rules:
 - apiGroups:
   - ""
@@ -2461,25 +2598,10 @@ rules:
   - get
   - watch
 ---
-aggregationRule:
-  clusterRoleSelectors:
-  - matchLabels:
-      rbac.ceph.rook.io/aggregate-to-rook-ceph-mgr-cluster: "true"
 apiVersion: rbac.authorization.k8s.io/v1beta1
 kind: ClusterRole
 metadata:
-  labels:
-    operator: rook
-    storage-backend: ceph
-  name: rook-ceph-mgr-cluster
-rules: []
----
-apiVersion: rbac.authorization.k8s.io/v1beta1
-kind: ClusterRole
-metadata:
-  labels:
-    rbac.ceph.rook.io/aggregate-to-rook-ceph-mgr-system: "true"
-  name: rook-ceph-mgr-system-rules
+  name: rook-ceph-mgr-system
 rules:
 - apiGroups:
   - ""
@@ -2490,22 +2612,11 @@ rules:
   - list
   - watch
 ---
-aggregationRule:
-  clusterRoleSelectors:
-  - matchLabels:
-      rbac.ceph.rook.io/aggregate-to-rook-ceph-mgr-system: "true"
-apiVersion: rbac.authorization.k8s.io/v1beta1
-kind: ClusterRole
-metadata:
-  name: rook-ceph-mgr-system
-rules: []
----
 apiVersion: rbac.authorization.k8s.io/v1beta1
 kind: ClusterRole
 metadata:
   labels:
     operator: rook
-    rbac.ceph.rook.io/aggregate-to-rook-ceph-mgr-cluster: "true"
     storage-backend: ceph
   name: rook-ceph-object-bucket
 rules:
@@ -3184,6 +3295,20 @@ subjects:
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRoleBinding
 metadata:
+  name: rook-ceph-admission-controller-rolebinding
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: rook-ceph-admission-controller-role
+subjects:
+- apiGroup: ""
+  kind: ServiceAccount
+  name: rook-ceph-admission-controller
+  namespace: rook-ceph
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
   name: rook-ceph-system-psp
 roleRef:
   apiGroup: rbac.authorization.k8s.io
@@ -3621,7 +3746,6 @@ metadata:
 ---
 apiVersion: v1
 data:
-  CSI_ENABLE_SNAPSHOTTER: "true"
   CSI_FORCE_CEPHFS_KERNEL_CLIENT: "true"
   ROOK_CSI_ALLOW_UNSUPPORTED_VERSION: "false"
   ROOK_CSI_ENABLE_CEPHFS: "true"
@@ -5527,12 +5651,6 @@ spec:
           value: "false"
         - name: ROOK_LOG_LEVEL
           value: INFO
-        - name: ROOK_CEPH_STATUS_CHECK_INTERVAL
-          value: 60s
-        - name: ROOK_MON_HEALTHCHECK_INTERVAL
-          value: 45s
-        - name: ROOK_MON_OUT_TIMEOUT
-          value: 600s
         - name: ROOK_DISCOVER_DEVICES_INTERVAL
           value: 60m
         - name: ROOK_HOSTPATH_REQUIRES_PRIVILEGED
@@ -5563,7 +5681,7 @@ spec:
           valueFrom:
             fieldRef:
               fieldPath: metadata.namespace
-        image: rook/ceph:v1.3.3
+        image: rook/ceph:v1.4.1
         name: rook-ceph-operator
         volumeMounts:
         - mountPath: /var/lib/rook
@@ -5981,7 +6099,11 @@ spec:
     allowUnsupported: false
     image: ceph/ceph:v15
   cleanupPolicy:
-    deleteDataDirOnHosts: ""
+    confirmation: ""
+    sanitizeDisks:
+      dataSource: zero
+      iteration: 1
+      method: quick
   continueUpgradeAfterChecksEvenIfNotHealthy: false
   crashCollector:
     disable: false
@@ -5994,6 +6116,24 @@ spec:
     manageMachineDisruptionBudgets: false
     managePodBudgets: false
     osdMaintenanceTimeout: 30
+  healthCheck:
+    daemonHealth:
+      mon:
+        disabled: false
+        interval: 45s
+      osd:
+        disabled: false
+        interval: 60s
+      status:
+        disabled: false
+        interval: 60s
+    livenessProbe:
+      mgr:
+        disabled: false
+      mon:
+        disabled: false
+      osd:
+        disabled: false
   mgr:
     modules:
     - enabled: true
@@ -6005,8 +6145,6 @@ spec:
     enabled: false
     rulesNamespace: rook-ceph
   network: null
-  rbdMirroring:
-    workers: 0
   removeOSDsIfOutAndSafeToRemove: false
   resources:
     crashcollector:

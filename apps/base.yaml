@@ -46,6 +46,7 @@ rules:
 - apiGroups:
   - ""
   resources:
+  - nodes
   - services
   - endpoints
   - namespaces
@@ -69,13 +70,13 @@ rules:
   verbs:
   - '*'
 - apiGroups:
-  - apiextensions.k8s.io
+  - coordination.k8s.io
   resources:
-  - customresourcedefinitions
+  - leases
   verbs:
+  - create
   - get
-  - list
-  - watch
+  - update
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRole
@@ -127,6 +128,15 @@ rules:
   verbs:
   - patch
 - apiGroups:
+  - extensions
+  resources:
+  - ingresses
+  verbs:
+  - create
+  - get
+  - list
+  - watch
+- apiGroups:
   - apiextensions.k8s.io
   resources:
   - customresourcedefinitions
@@ -148,6 +158,7 @@ rules:
   - ciliumnodes
   - ciliumnodes/status
   - ciliumidentities
+  - ciliumidentities/status
   verbs:
   - '*'
 ---
@@ -284,38 +295,33 @@ metadata:
 apiVersion: v1
 data:
   auto-direct-node-routes: "false"
-  bpf-map-dynamic-size-ratio: "0.0025"
+  bpf-ct-global-any-max: "262144"
+  bpf-ct-global-tcp-max: "524288"
   bpf-policy-map-max: "16384"
   cluster-name: default
-  cluster-pool-ipv4-cidr: 10.0.0.0/8
-  cluster-pool-ipv4-mask-size: "24"
   debug: "false"
-  disable-cnp-status-updates: "true"
   enable-auto-protect-node-port-range: "true"
-  enable-bpf-clock-probe: "true"
-  enable-bpf-masquerade: "true"
   enable-endpoint-health-checking: "true"
+  enable-external-ips: "false"
   enable-health-check-nodeport: "true"
+  enable-host-reachable-services: "false"
   enable-ipv4: "true"
   enable-ipv6: "false"
+  enable-node-port: "false"
   enable-remote-node-identity: "true"
-  enable-session-affinity: "true"
   enable-well-known-identities: "false"
   enable-xt-socket-fallback: "true"
   identity-allocation-mode: crd
   install-iptables-rules: "true"
-  ipam: cluster-pool
-  k8s-require-ipv4-pod-cidr: "true"
-  k8s-require-ipv6-pod-cidr: "false"
   kube-proxy-replacement: probe
   masquerade: "true"
   monitor-aggregation: medium
   monitor-aggregation-flags: all
   monitor-aggregation-interval: 5s
   node-port-bind-protection: "true"
-  operator-api-serve-addr: 127.0.0.1:9234
   preallocate-bpf-maps: "false"
   sidecar-istio-proxy-image: cilium/istio_proxy
+  tofqdns-enable-poller: "false"
   tunnel: vxlan
   wait-bpf-mount: "false"
 kind: ConfigMap
@@ -447,27 +453,74 @@ spec:
         io.cilium/app: operator
         name: cilium-operator
     spec:
+      affinity:
+        podAntiAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+          - labelSelector:
+              matchExpressions:
+              - key: io.cilium/app
+                operator: In
+                values:
+                - operator
+            topologyKey: kubernetes.io/hostname
       containers:
       - args:
-        - --config-dir=/tmp/cilium/config-map
         - --debug=$(CILIUM_DEBUG)
+        - --identity-allocation-mode=$(CILIUM_IDENTITY_ALLOCATION_MODE)
+        - --synchronize-k8s-nodes=true
         command:
-        - cilium-operator-generic
+        - cilium-operator
         env:
-        - name: K8S_NODE_NAME
-          valueFrom:
-            fieldRef:
-              apiVersion: v1
-              fieldPath: spec.nodeName
         - name: CILIUM_K8S_NAMESPACE
           valueFrom:
             fieldRef:
               apiVersion: v1
               fieldPath: metadata.namespace
+        - name: K8S_NODE_NAME
+          valueFrom:
+            fieldRef:
+              apiVersion: v1
+              fieldPath: spec.nodeName
         - name: CILIUM_DEBUG
           valueFrom:
             configMapKeyRef:
               key: debug
+              name: cilium-config
+              optional: true
+        - name: CILIUM_CLUSTER_NAME
+          valueFrom:
+            configMapKeyRef:
+              key: cluster-name
+              name: cilium-config
+              optional: true
+        - name: CILIUM_CLUSTER_ID
+          valueFrom:
+            configMapKeyRef:
+              key: cluster-id
+              name: cilium-config
+              optional: true
+        - name: CILIUM_IPAM
+          valueFrom:
+            configMapKeyRef:
+              key: ipam
+              name: cilium-config
+              optional: true
+        - name: CILIUM_DISABLE_ENDPOINT_CRD
+          valueFrom:
+            configMapKeyRef:
+              key: disable-endpoint-crd
+              name: cilium-config
+              optional: true
+        - name: CILIUM_KVSTORE
+          valueFrom:
+            configMapKeyRef:
+              key: kvstore
+              name: cilium-config
+              optional: true
+        - name: CILIUM_KVSTORE_OPT
+          valueFrom:
+            configMapKeyRef:
+              key: kvstore-opt
               name: cilium-config
               optional: true
         - name: AWS_ACCESS_KEY_ID
@@ -488,7 +541,13 @@ spec:
               key: AWS_DEFAULT_REGION
               name: cilium-aws
               optional: true
-        image: docker.io/cilium/operator-generic:v1.8.2
+        - name: CILIUM_IDENTITY_ALLOCATION_MODE
+          valueFrom:
+            configMapKeyRef:
+              key: identity-allocation-mode
+              name: cilium-config
+              optional: true
+        image: docker.io/cilium/operator:v1.7.7
         imagePullPolicy: IfNotPresent
         livenessProbe:
           httpGet:
@@ -500,19 +559,10 @@ spec:
           periodSeconds: 10
           timeoutSeconds: 3
         name: cilium-operator
-        volumeMounts:
-        - mountPath: /tmp/cilium/config-map
-          name: cilium-config-path
-          readOnly: true
       hostNetwork: true
-      priorityClassName: system-cluster-critical
       restartPolicy: Always
       serviceAccount: cilium-operator
       serviceAccountName: cilium-operator
-      volumes:
-      - configMap:
-          name: cilium-config
-        name: cilium-config-path
 ---
 apiVersion: apps/v1
 kind: Deployment
@@ -600,16 +650,6 @@ spec:
       labels:
         k8s-app: cilium
     spec:
-      affinity:
-        podAntiAffinity:
-          requiredDuringSchedulingIgnoredDuringExecution:
-          - labelSelector:
-              matchExpressions:
-              - key: k8s-app
-                operator: In
-                values:
-                - cilium
-            topologyKey: kubernetes.io/hostname
       containers:
       - args:
         - --config-dir=/tmp/cilium/config-map
@@ -652,7 +692,7 @@ spec:
               key: custom-cni-conf
               name: cilium-config
               optional: true
-        image: docker.io/cilium/cilium:v1.8.2
+        image: docker.io/cilium/cilium:v1.7.7
         imagePullPolicy: IfNotPresent
         lifecycle:
           postStart:
@@ -665,30 +705,24 @@ spec:
               command:
               - /cni-uninstall.sh
         livenessProbe:
+          exec:
+            command:
+            - cilium
+            - status
+            - --brief
           failureThreshold: 10
-          httpGet:
-            host: 127.0.0.1
-            httpHeaders:
-            - name: brief
-              value: "true"
-            path: /healthz
-            port: 9876
-            scheme: HTTP
           initialDelaySeconds: 120
           periodSeconds: 30
           successThreshold: 1
           timeoutSeconds: 5
         name: cilium-agent
         readinessProbe:
+          exec:
+            command:
+            - cilium
+            - status
+            - --brief
           failureThreshold: 3
-          httpGet:
-            host: 127.0.0.1
-            httpHeaders:
-            - name: brief
-              value: "true"
-            path: /healthz
-            port: 9876
-            scheme: HTTP
           initialDelaySeconds: 5
           periodSeconds: 30
           successThreshold: 1
@@ -742,13 +776,9 @@ spec:
               key: wait-bpf-mount
               name: cilium-config
               optional: true
-        image: docker.io/cilium/cilium:v1.8.2
+        image: docker.io/cilium/cilium:v1.7.7
         imagePullPolicy: IfNotPresent
         name: clean-cilium-state
-        resources:
-          requests:
-            cpu: 100m
-            memory: 100Mi
         securityContext:
           capabilities:
             add:
